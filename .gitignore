@@ -218,3 +218,40 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+
+# --- Tombaugh project ---
+
+# SPHEREx downloads and caches (large, never commit)
+cache/
+backend/cache/
+*.fits
+*.fits.gz
+*.fits.fz
+
+# Secrets (keep only the example file)
+.env.*
+!.env.example
+
+# Claude Code: commit settings.json (the commit/push block), ignore personal overrides
+.claude/settings.local.json
+
+# Vercel and Supabase local folders
+.vercel/
+supabase/.temp/
+supabase/.branches/
+
+# Node (only if the Vercel CLI is installed locally)
+node_modules/
+
+# OS and editor clutter
+.DS_Store
+Thumbs.db
+*.swp
+
+# The Python template ignores every "lib/" folder; keep front-end libraries
+!docs/js/lib/
+
+# Working brief for Claude Code (kept local)
+CLAUDE.md
