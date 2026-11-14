@@ -1,0 +1,174 @@
+"""SPHEREx search, cutouts, disk cache and FITS reading."""
+
+import io
+import json
+import logging
+import time
+import warnings
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+import numpy as np
+import requests
+from astropy.io import fits
+from astropy.io.votable import parse_single_table
+from astropy.wcs import WCS, FITSFixedWarning
+
+from app import config
+
+log = logging.getLogger("tombaugh.archive")
+
+# The wavelength WCS shares a header with SIP terms; astropy logs a long note about it
+logging.getLogger("astropy").setLevel(logging.WARNING)
+
+RETRY_STATUS = {429, 500, 502, 503, 504}
+
+
+# --- HTTP ---
+
+
+def http_get(url: str) -> bytes:
+    """GET with retries and backoff. IRSA returns 502/503 now and then."""
+    last = ""
+    for attempt in range(config.HTTP_RETRIES):
+        try:
+            res = requests.get(url, timeout=config.HTTP_TIMEOUT_S)
+            if res.status_code == 200:
+                return res.content
+            last = f"HTTP {res.status_code}"
+            if res.status_code not in RETRY_STATUS:
+                break
+        except requests.RequestException as err:
+            last = type(err).__name__
+        wait = config.HTTP_BACKOFF_S * 2**attempt
+        log.warning("GET failed (%s), retry in %.0f s: %s", last, wait, url)
+        time.sleep(wait)
+    raise RuntimeError(f"GET failed after retries ({last}): {url}")
+
+
+# --- Search ---
+
+
+def search_collection(
+    collection: str, ra: float, dec: float, radius_deg: float
+) -> list[dict]:
+    url = (
+        f"{config.IRSA_SIA_URL}?COLLECTION={collection}"
+        f"&POS=circle+{ra:.6f}+{dec:.6f}+{radius_deg:.6f}"
+    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        table = parse_single_table(io.BytesIO(http_get(url))).to_table(
+            use_names_over_ids=True
+        )
+    products = []
+    for row in table:
+        if str(row["dataproduct_type"]) != "image":
+            continue
+        products.append(
+            {
+                "obs_id": str(row["obs_id"]),
+                "detector": str(row["energy_bandpassname"]).split("-")[-1],
+                "collection": str(row["obs_collection"]),
+                "access_url": str(row["access_url"]),
+                "mjd": 0.5 * (float(row["t_min"]) + float(row["t_max"])),
+                "exptime_s": float(row["t_exptime"]),
+                "wave_min_um": float(row["em_min"]) * 1e6,
+                "wave_max_um": float(row["em_max"]) * 1e6,
+            }
+        )
+    return products
+
+
+def search(
+    ra: float, dec: float, radius_deg: float = config.SEARCH_RADIUS_DEG
+) -> list[dict]:
+    """All Level 2 images covering a position, newest release first, cached on disk."""
+    name = f"{ra:.4f}_{dec:+.4f}_{radius_deg:.4f}_{'-'.join(config.SPHEREX_COLLECTIONS)}.json"
+    path = config.CACHE_DIR / "search" / name
+    if path.is_file():
+        return json.loads(path.read_text())
+
+    # Earlier collections in the config list win when an exposure is in both
+    seen: dict[tuple[str, str], dict] = {}
+    for collection in config.SPHEREX_COLLECTIONS:
+        for p in search_collection(collection, ra, dec, radius_deg):
+            seen.setdefault((p["obs_id"], p["detector"]), p)
+    products = sorted(seen.values(), key=lambda p: (p["mjd"], p["detector"]))
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(products))
+    return products
+
+
+# --- Cutouts ---
+
+
+def cutout_path(product: dict, ra: float, dec: float, size_deg: float) -> Path:
+    name = f"{product['obs_id']}_{product['detector']}_{ra:.4f}_{dec:+.4f}_{size_deg:.3f}.fits"
+    return config.CACHE_DIR / "cutouts" / product["collection"] / name
+
+
+def fetch_cutout(product: dict, ra: float, dec: float, size_deg: float) -> Path:
+    """Download one cutout unless it is already cached."""
+    path = cutout_path(product, ra, dec, size_deg)
+    if path.is_file():
+        return path
+    url = f"{product['access_url']}?center={ra:.6f},{dec:.6f}&size={size_deg:.4f}"
+    data = http_get(url)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".part")
+    tmp.write_bytes(data)
+    tmp.replace(path)
+    return path
+
+
+def fetch_cutouts(
+    products: list[dict], ra: float, dec: float, size_deg: float
+) -> list[Path | None]:
+    """Download many cutouts in parallel. A failed download gives None."""
+
+    def fetch(product: dict) -> Path | None:
+        try:
+            return fetch_cutout(product, ra, dec, size_deg)
+        except RuntimeError as err:
+            log.warning("Skipping %s: %s", product["obs_id"], err)
+            return None
+
+    with ThreadPoolExecutor(max_workers=config.DOWNLOAD_WORKERS) as pool:
+        return list(pool.map(fetch, products))
+
+
+# --- FITS reading ---
+
+
+def read_wavelength(hdul: fits.HDUList) -> np.ndarray:
+    """Central wavelength in microns at every pixel, from the WCS-WAVE lookup table."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", FITSFixedWarning)
+        wave_wcs = WCS(hdul["IMAGE"].header, fobj=hdul, key="W")
+    wave_wcs.sip = None
+    ny, nx = hdul["IMAGE"].data.shape
+    yy, xx = np.mgrid[0:ny, 0:nx]
+    wave, _ = wave_wcs.wcs_pix2world(xx, yy, 0)
+    return wave.astype(np.float32)
+
+
+def read_cutout(path: Path) -> dict:
+    """Read the planes we use. PSF is skipped."""
+    with fits.open(path) as hdul:
+        header = hdul["IMAGE"].header
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", FITSFixedWarning)
+            sky_wcs = WCS(header)
+        return {
+            "image": hdul["IMAGE"].data.astype(np.float32),
+            "flags": hdul["FLAGS"].data.astype(np.int64),
+            "variance": hdul["VARIANCE"].data.astype(np.float32),
+            "zodi": hdul["ZODI"].data.astype(np.float32),
+            "wavelength": read_wavelength(hdul),
+            "header": header,
+            "flags_header": hdul["FLAGS"].header,
+            "wcs": sky_wcs,
+            "finast": int(header.get("FINAST", 0)) == 1,
+        }

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tombaugh - What's moving above you?</title>
+    <meta
+      name="description"
+      content="Tombaugh shows what is moving in NASA SPHEREx images of the patch of sky above you."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="sleeve">
+      <h1 class="wordmark">Tombaugh</h1>
+      <p class="tagline">What's moving above you?</p>
+    </header>
+
+    <main class="plate" id="plate" aria-label="Sky plate">
+      <p class="plate-note">Plate not loaded yet.</p>
+    </main>
+
+    <footer class="logline">
+      <span>API</span>
+      <span id="api-status" role="status">checking</span>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+/* --- Tokens --- */
+
+:root {
+  --plate: #f3efe6;
+  --ink: #1a1815;
+  --ink-soft: #5c574e;
+  --rule: #cfc8b8;
+  --mark: #c8102e;
+  --font-head: "Fraunces", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* --- Page --- */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--plate);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+/* --- Sleeve label --- */
+
+.sleeve {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.wordmark {
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/* --- Plate --- */
+
+.plate {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.plate-note {
+  color: var(--ink-soft);
+}
+
+/* --- Log line --- */
+
+.logline {
+  display: flex;
+  gap: 12px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-size: 12px;
+}
