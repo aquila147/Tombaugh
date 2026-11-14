@@ -1,0 +1,161 @@
+{
+  "wise0855": {
+    "name": "WISE 0855-0714",
+    "detectors": [
+      "D5",
+      "D6"
+    ],
+    "stacks": 47,
+    "alignment": {
+      "frames": 93,
+      "frames_aligned": 93,
+      "finast_solved": 0,
+      "median_stars_per_frame": 12.0,
+      "median_offset_arcsec": 0.5853743764757556,
+      "median_scatter_arcsec": 0.4383618514952882,
+      "frame_shift_std_arcsec": 0.22191644402823624
+    },
+    "motion_points": 36,
+    "motion_fit": {
+      "pm_ra_arcsec_yr": -7.364929977410137,
+      "pm_dec_arcsec_yr": 1.475850015301739,
+      "rate_arcsec_yr": 7.511346539723794,
+      "rate_err_arcsec_yr": 0.574669787725984,
+      "residual_rms_arcsec": 1.271206361047715,
+      "n_points": 34,
+      "baseline_yr": 1.0217067295516924
+    },
+    "motion_fit_with_parallax": {
+      "pm_ra_arcsec_yr": -7.126162083792949,
+      "pm_dec_arcsec_yr": 1.4014748630730058,
+      "rate_arcsec_yr": 7.262666028141028,
+      "rate_err_arcsec_yr": 0.6498835561160324,
+      "residual_rms_arcsec": 1.2528731450226926,
+      "n_points": 34,
+      "baseline_yr": 1.0217067295516924,
+      "parallax_arcsec": 0.16518993791720218,
+      "parallax_err_arcsec": 0.21123448922049376
+    },
+    "published_rate_arcsec_yr": 8.15
+  },
+  "barnard": {
+    "name": "Barnard's Star",
+    "detectors": [
+      "D3",
+      "D4"
+    ],
+    "stacks": 50,
+    "alignment": {
+      "frames": 114,
+      "frames_aligned": 114,
+      "finast_solved": 0,
+      "median_stars_per_frame": 46.5,
+      "median_offset_arcsec": 0.5462127573893875,
+      "median_scatter_arcsec": 0.411592653680244,
+      "frame_shift_std_arcsec": 0.1438335167102967
+    },
+    "motion_points": 50,
+    "motion_fit": {
+      "pm_ra_arcsec_yr": 0.4924825363974654,
+      "pm_dec_arcsec_yr": 11.028502417369078,
+      "rate_arcsec_yr": 11.039492951153692,
+      "rate_err_arcsec_yr": 0.8247034948648737,
+      "residual_rms_arcsec": 2.2272645375973132,
+      "n_points": 50,
+      "baseline_yr": 1.046929032816794
+    },
+    "motion_fit_with_parallax": {
+      "pm_ra_arcsec_yr": -0.1290450376311433,
+      "pm_dec_arcsec_yr": 10.901495420128615,
+      "rate_arcsec_yr": 10.90225917031981,
+      "rate_err_arcsec_yr": 0.7545391865781425,
+      "residual_rms_arcsec": 2.025464722112529,
+      "n_points": 50,
+      "baseline_yr": 1.046929032816794,
+      "parallax_arcsec": 1.4948827184526392,
+      "parallax_err_arcsec": 0.33553842458393385
+    },
+    "published_rate_arcsec_yr": 10.39
+  },
+  "eps_indi_b": {
+    "name": "Epsilon Indi B",
+    "detectors": [
+      "D2",
+      "D3"
+    ],
+    "stacks": 77,
+    "alignment": {
+      "frames": 151,
+      "frames_aligned": 151,
+      "finast_solved": 0,
+      "median_stars_per_frame": 24.0,
+      "median_offset_arcsec": 0.5948908473610237,
+      "median_scatter_arcsec": 0.4524331601234425,
+      "frame_shift_std_arcsec": 0.2591272635630492
+    },
+    "motion_points": 75,
+    "motion_fit": {
+      "pm_ra_arcsec_yr": 3.733777746455254,
+      "pm_dec_arcsec_yr": -2.6272120838471786,
+      "rate_arcsec_yr": 4.5654506451649555,
+      "rate_err_arcsec_yr": 0.08177556640529851,
+      "residual_rms_arcsec": 0.369466303292674,
+      "n_points": 70,
+      "baseline_yr": 1.439072037084179
+    },
+    "motion_fit_with_parallax": {
+      "pm_ra_arcsec_yr": 3.9139113878227203,
+      "pm_dec_arcsec_yr": -2.487004484871647,
+      "rate_arcsec_yr": 4.637229092841981,
+      "rate_err_arcsec_yr": 0.07852102072925234,
+      "residual_rms_arcsec": 0.3288294008960137,
+      "n_points": 70,
+      "baseline_yr": 1.439072037084179,
+      "parallax_arcsec": 0.29142379589608475,
+      "parallax_err_arcsec": 0.049179952388252915
+    },
+    "published_rate_arcsec_yr": 4.7
+  },
+  "rw_aur": {
+    "name": "RW Aurigae",
+    "detectors": [
+      "D2",
+      "D4"
+    ],
+    "stacks": 38,
+    "alignment": {
+      "frames": 110,
+      "frames_aligned": 110,
+      "finast_solved": 0,
+      "median_stars_per_frame": 56.5,
+      "median_offset_arcsec": 0.612265358303535,
+      "median_scatter_arcsec": 0.528287298319503,
+      "frame_shift_std_arcsec": 0.1753993018263901
+    },
+    "motion_points": 0,
+    "motion_fit": null,
+    "motion_fit_with_parallax": null,
+    "published_rate_arcsec_yr": null
+  },
+  "r_dra": {
+    "name": "R Draconis",
+    "detectors": [
+      "D2",
+      "D4"
+    ],
+    "stacks": 63,
+    "alignment": {
+      "frames": 151,
+      "frames_aligned": 140,
+      "finast_solved": 0,
+      "median_stars_per_frame": 9.0,
+      "median_offset_arcsec": 0.4958418505577559,
+      "median_scatter_arcsec": 0.3379964255290068,
+      "frame_shift_std_arcsec": 0.22419934363156852
+    },
+    "motion_points": 0,
+    "motion_fit": null,
+    "motion_fit_with_parallax": null,
+    "published_rate_arcsec_yr": null
+  }
+}

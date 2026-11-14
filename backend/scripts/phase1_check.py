@@ -65,7 +65,7 @@ def main() -> None:
     )
 
     out = config.CACHE_DIR / "phase1_wise0855.png"
-    png.save_png(out, png.stretch(image), negative=True, zoom=4)
+    png.save_png(out, png.stretch(image, *png.limits(image)), negative=True, zoom=4)
     print(f"  saved {out}")
 
 

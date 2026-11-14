@@ -3,6 +3,7 @@
 import io
 import json
 import logging
+import threading
 import time
 import warnings
 from concurrent.futures import ThreadPoolExecutor
@@ -23,18 +24,60 @@ logging.getLogger("astropy").setLevel(logging.WARNING)
 
 RETRY_STATUS = {429, 500, 502, 503, 504}
 
+wave_lock = threading.Lock()
+
 
 # --- HTTP ---
 
 
-def http_get(url: str) -> bytes:
+def hdu_spans(buf: bytes) -> list[tuple[str, int, int]]:
+    """(name, start, end) of every HDU whose header is complete in buf."""
+    spans = []
+    pos = 0
+    while True:
+        end = pos
+        found = False
+        while end + 2880 <= len(buf) and not found:
+            block = buf[end : end + 2880]
+            found = any(block[i : i + 8] == b"END     " for i in range(0, 2880, 80))
+            end += 2880
+        if not found:
+            return spans
+        header = fits.Header.fromstring(bytes(buf[pos:end]).decode("ascii", "replace"))
+        size = 0
+        if header.get("NAXIS", 0) > 0:
+            size = header.get("PCOUNT", 0)
+            pixels = 1
+            for i in range(1, header["NAXIS"] + 1):
+                pixels *= header[f"NAXIS{i}"]
+            size = (
+                abs(header["BITPIX"]) // 8 * header.get("GCOUNT", 1) * (size + pixels)
+            )
+        stop = end + -(-size // 2880) * 2880
+        spans.append((str(header.get("EXTNAME", "PRIMARY")).strip(), pos, stop))
+        pos = stop
+
+
+def read_before_psf(res: requests.Response) -> bytes:
+    """Read a FITS stream and hang up when the PSF extension starts."""
+    buf = bytearray()
+    for chunk in res.iter_content(65536):
+        buf.extend(chunk)
+        for name, start, _ in hdu_spans(buf):
+            if name in config.PSF_EXTENSIONS:
+                res.close()
+                return bytes(buf[:start])
+    return bytes(buf)
+
+
+def http_get(url: str, skip_psf: bool = False) -> bytes:
     """GET with retries and backoff. IRSA returns 502/503 now and then."""
     last = ""
     for attempt in range(config.HTTP_RETRIES):
         try:
-            res = requests.get(url, timeout=config.HTTP_TIMEOUT_S)
+            res = requests.get(url, timeout=config.HTTP_TIMEOUT_S, stream=skip_psf)
             if res.status_code == 200:
-                return res.content
+                return read_before_psf(res) if skip_psf else res.content
             last = f"HTTP {res.status_code}"
             if res.status_code not in RETRY_STATUS:
                 break
@@ -109,13 +152,34 @@ def cutout_path(product: dict, ra: float, dec: float, size_deg: float) -> Path:
     return config.CACHE_DIR / "cutouts" / product["collection"] / name
 
 
+def wave_table_hdu(product: dict, url: str) -> bytes:
+    """Raw WCS-WAVE extension for a detector, taken once from a full cutout.
+
+    The table is in detector coordinates and comes from one calibration file
+    per detector, so it is the same in every cutout of a collection.
+    """
+    path = (
+        config.CACHE_DIR / "wave" / f"{product['collection']}_{product['detector']}.hdu"
+    )
+    with wave_lock:
+        if not path.is_file():
+            full = http_get(url)
+            spans = {name: (a, b) for name, a, b in hdu_spans(full)}
+            start, stop = spans["WCS-WAVE"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(full[start:stop])
+        return path.read_bytes()
+
+
 def fetch_cutout(product: dict, ra: float, dec: float, size_deg: float) -> Path:
-    """Download one cutout unless it is already cached."""
+    """Download one cutout unless it is already cached. The PSF is not downloaded."""
     path = cutout_path(product, ra, dec, size_deg)
     if path.is_file():
         return path
     url = f"{product['access_url']}?center={ra:.6f},{dec:.6f}&size={size_deg:.4f}"
-    data = http_get(url)
+    data = http_get(url, skip_psf=True)
+    if "WCS-WAVE" not in [name for name, _, _ in hdu_spans(data)]:
+        data += wave_table_hdu(product, url)
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".part")
     tmp.write_bytes(data)
@@ -171,4 +235,5 @@ def read_cutout(path: Path) -> dict:
             "flags_header": hdul["FLAGS"].header,
             "wcs": sky_wcs,
             "finast": int(header.get("FINAST", 0)) == 1,
+            "mjd": float(header["MJD-AVG"]),
         }

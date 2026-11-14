@@ -74,6 +74,30 @@ GRID_PIXEL_ARCSEC = 3.0
 DEFAULT_FOV_DEG = 0.2
 MAX_FOV_DEG = 0.5
 
+# Extension names of the PSF in different releases. Downloads stop when one starts.
+PSF_EXTENSIONS = ["PSF", "EPSF"]
+
+# --- Gaia alignment ---
+
+GAIA_TAP_URL = "https://gea.esac.esa.int/tap-server/tap/sync"
+GAIA_EPOCH_MJD = 57388.5  # J2016.0
+GAIA_MAG_LIMIT = 17.0
+ALIGN_MIN_SNR = 10.0
+ALIGN_MAX_SHIFT_PIX = 1.5
+ALIGN_ISOLATION_ARCSEC = 25.0
+ALIGN_MIN_STARS_FULL_FIT = 8
+CENTROID_SIGMA_PIX = 1.2
+
+# --- Stacking and motion ---
+
+STACK_CLIP_SIGMA = 3.0
+MOTION_MIN_SNR = 5.0
+# Weight width for stars whose core is masked as saturated
+SATURATED_SIGMA_PIX = 4.0
+# Position error model: floor plus a term that falls with signal to noise
+MOTION_ERR_FLOOR_ARCSEC = 0.3
+MOTION_ERR_ARCSEC = 6.0
+
 DOWNLOAD_WORKERS = 8
 HTTP_TIMEOUT_S = 60
 HTTP_RETRIES = 4

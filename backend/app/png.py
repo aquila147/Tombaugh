@@ -7,14 +7,18 @@ from pathlib import Path
 import numpy as np
 
 
-def stretch(
+def limits(
     image: np.ndarray, lo_pct: float = 25.0, hi_pct: float = 99.7
-) -> np.ndarray:
-    """Asinh stretch to 0..1. NaN pixels map to 0."""
+) -> tuple[float, float]:
     good = image[np.isfinite(image)]
     if good.size == 0:
-        return np.zeros(image.shape, dtype=np.float32)
+        return 0.0, 1.0
     lo, hi = np.percentile(good, [lo_pct, hi_pct])
+    return float(lo), float(hi)
+
+
+def stretch(image: np.ndarray, lo: float, hi: float) -> np.ndarray:
+    """Asinh stretch to 0..1 between fixed limits. NaN pixels map to 0."""
     scaled = np.clip((image - lo) / max(hi - lo, 1e-12), 0, 1)
     out = np.arcsinh(10 * scaled) / np.arcsinh(10)
     return np.nan_to_num(out, nan=0.0).astype(np.float32)
