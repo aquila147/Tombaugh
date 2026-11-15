@@ -154,6 +154,12 @@ def known_small_bodies(
     path = config.CACHE_DIR / "sb_ident" / name
     if path.is_file():
         return json.loads(path.read_text())
+    # Files saved before the strip height was part of the name
+    legacy = path.with_name(
+        f"{ra:.4f}_{dec:+.4f}_{mjd:.4f}_{half_width_deg:.3f}_{vmag_limit}.json"
+    )
+    if half_height_deg == half_width_deg and legacy.is_file():
+        return json.loads(legacy.read_text())
     when = Time(mjd, format="mjd").utc.strftime("%Y-%m-%d_%H:%M:%S")
     bodies = []
     for kind in ("a", "c"):
@@ -189,3 +195,50 @@ def known_small_bodies(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(bodies))
     return bodies
+
+
+# --- SIMBAD ---
+
+
+def simbad_near(ra: float, dec: float, mjd: float) -> list[dict]:
+    """SIMBAD objects near a position, moved to a date with their proper motion.
+
+    Nearby stars move by arcminutes between the catalogue epoch and now, so
+    the cone is wide and each object is moved before its distance is measured.
+    """
+    path = config.CACHE_DIR / "simbad" / f"{ra:.4f}_{dec:+.4f}_{mjd:.0f}.json"
+    if path.is_file():
+        return json.loads(path.read_text())
+    query = (
+        "SELECT main_id, ra, dec, pmra, pmdec, otype FROM basic "
+        f"WHERE CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', {ra:.6f}, {dec:.6f}, "
+        f"{config.SIMBAD_CONE_DEG})) = 1"
+    )
+    rows, last = None, None
+    for url in config.SIMBAD_TAP_URLS:
+        try:
+            rows = tap_rows(url, query)
+            break
+        except RuntimeError as err:
+            last = err
+    if rows is None:
+        raise RuntimeError(f"SIMBAD did not answer: {last}")
+    years = (mjd - 51544.5) / 365.25
+    out = []
+    for row in rows:
+        pm_ra, pm_dec = number(row["pmra"]), number(row["pmdec"])
+        o_dec = float(row["dec"]) + pm_dec * years / 3.6e6
+        o_ra = float(row["ra"]) + pm_ra * years / 3.6e6 / np.cos(np.radians(o_dec))
+        sep = 3600 * np.hypot((o_ra - ra) * np.cos(np.radians(dec)), o_dec - dec)
+        out.append(
+            {
+                "name": " ".join(str(row["main_id"]).split()),
+                "type": str(row["otype"]),
+                "pm_arcsec_yr": float(np.hypot(pm_ra, pm_dec)) / 1000,
+                "separation_arcsec": float(sep),
+            }
+        )
+    out.sort(key=lambda o: o["separation_arcsec"])
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(out))
+    return out

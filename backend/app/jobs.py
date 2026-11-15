@@ -11,7 +11,18 @@ from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 
-from app import archive, config, detect, engine, frames, overhead, plates
+from app import (
+    archive,
+    candidates,
+    checks,
+    config,
+    detect,
+    engine,
+    frames,
+    overhead,
+    plates,
+    supabase_client,
+)
 
 log = logging.getLogger("tombaugh.jobs")
 
@@ -87,41 +98,83 @@ def sky(field: dict, x_arcsec: float, y_arcsec: float) -> tuple[float, float]:
     return round(float(ra), 5), round(float(dec), 5)
 
 
-def find_candidates(field: dict, result: dict) -> list[dict]:
-    """Unchecked candidates from the engine: slow movers and fast tracks."""
-    out = []
-    scale = config.GRID_PIXEL_ARCSEC
-    movers = detect.find_slow_movers(
-        result["trend"], result["trend_err"], result["mean_image"]
-    )
-    for mover in sorted(movers, key=lambda m: -m["snr"])[: config.LIVE_MAX_CANDIDATES]:
-        ra, dec = sky(field, mover["x"] * scale, mover["y"] * scale)
-        out.append(
-            {
-                "kind": "slow",
-                "ra": ra,
-                "dec": dec,
-                "rate": round(mover["rate_arcsec_yr"], 2),
-                "unit": "arcsec/yr",
-                "significance": round(mover["snr"], 1),
-            }
-        )
+def find_candidates(
+    field: dict, result: dict, key: str, name: str, centre: list
+) -> list[dict]:
+    """Engine candidates with their automatic checks, stored by the back end.
+
+    Each one is saved to the candidates table with the service key and kept
+    in the plate's own file, so the checks can be shown without Supabase.
+    """
     dets = detect.detections_table(result["maps"], "z_local")
-    tracks = detect.link_tracks(dets, config.LINK_FAST)
-    for track in tracks[: config.LIVE_MAX_CANDIDATES]:
-        ra, dec = sky(field, track["x0"], track["y0"])
+    run_info = {
+        "plate": key,
+        "detector": field["frames"][0]["detector"],
+        "centre": tuple(centre),
+        "field": field,
+        "dets": dets,
+        "mjds": np.array([f["mjd"] for f in field["frames"]]),
+        "tracks": detect.link_tracks(dets, config.LINK_FAST),
+        "movers": detect.find_slow_movers(
+            result["trend"], result["trend_err"], result["mean_image"]
+        ),
+    }
+    found = candidates.slow_candidates(run_info) + candidates.fast_candidates(run_info)
+    context = {
+        "centre": run_info["centre"],
+        "field": field,
+        "tracks": run_info["tracks"],
+    }
+    out = []
+    for candidate in found[: config.LIVE_MAX_CANDIDATES]:
+        outcome = checks.run_checks(candidate, context)
+        row = candidates.to_row(
+            candidate,
+            outcome,
+            name,
+            "Live engine run on SPHEREx Data Release 1 exposures",
+        )
+        row_id = supabase_client.save_candidate(row)
+        fast = candidate["kind"] == "fast"
         out.append(
             {
-                "kind": "fast",
-                "ra": ra,
-                "dec": dec,
-                "mjd": round(track["t0"], 4),
-                "rate": round(track["rate_arcsec_day"] / 24, 1),
-                "unit": "arcsec/hr",
-                "frames": track["n_frames"],
+                "id": row_id,
+                "kind": candidate["kind"],
+                "ra": row["ra"],
+                "dec": row["dec"],
+                "rate": round(
+                    candidate["rate_arcsec_hr" if fast else "rate_arcsec_yr"], 2
+                ),
+                "unit": "arcsec/hr" if fast else "arcsec/yr",
+                "frames": candidate["n_frames"],
+                "significance": row["checks"]["summary"].get("significance"),
+                "status": row["status"],
+                "row": row,
             }
         )
     return out
+
+
+def check_at(job_id: str, ra: float, dec: float) -> dict | None:
+    """Stored checks of the engine candidate nearest a position in a job's field."""
+    job = jobs.get(job_id)
+    if not job or job.get("status") != "done":
+        return None
+    meta = json.loads((FIELDS_DIR / job["field_id"] / "meta.json").read_text())
+    best = None
+    for candidate in meta.get("candidates", []):
+        sep = float(
+            checks.separation_arcsec(candidate["ra"], candidate["dec"], ra, dec)
+        )
+        if sep <= config.CHECK_CLICK_ARCSEC and (best is None or sep < best[0]):
+            best = (sep, candidate)
+    if best is None:
+        return {
+            "candidate": None,
+            "reason": f"The engine has no candidate within {config.CHECK_CLICK_ARCSEC:.0f} "
+            "arcsec of this position.",
+        }
+    return {"candidate": best[1], "separation_arcsec": round(best[0], 1)}
 
 
 def run(job: dict) -> None:
@@ -173,7 +226,7 @@ def run(job: dict) -> None:
             stacks = frames.stack_visits(field["frames"])
             advance(job, "Running the engine: per-pixel noise and time fit.", 4)
             result = engine.clean_differences(field["frames"])
-            candidates = find_candidates(field, result)
+            found = find_candidates(field, result, key, name, job["centre"])
             advance(job, "Writing the plates.", 5)
             show = frames.pick_evenly(list(range(len(field["frames"]))), 40)
             plates.write_engine_view(
@@ -186,7 +239,7 @@ def run(job: dict) -> None:
                 field,
                 stacks,
                 (ra, dec, fov),
-                extra={"kind": "live", "candidates": candidates, "note": note},
+                extra={"kind": "live", "candidates": found, "note": note},
             )
         meta = json.loads((out_dir / "meta.json").read_text())
         job["candidates"] = len(meta.get("candidates", []))

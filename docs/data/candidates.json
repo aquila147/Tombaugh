@@ -1,0 +1,1476 @@
+[
+ {
+  "id": 17,
+  "ra": 331.096561,
+  "dec": -56.800483,
+  "pm_ra": 2.957,
+  "pm_dec": -1.714,
+  "rate": null,
+  "frames_used": 60,
+  "checks": {
+   "summary": {
+    "label": "* eps Ind B",
+    "kind": "slow",
+    "plate": "eps_indi_b",
+    "field": "Epsilon Indi B field",
+    "detector": "D3",
+    "also_seen_in": [
+     "D2"
+    ],
+    "mjd": 60931.8252,
+    "date": "2025-09-13",
+    "motion": "3.42 arcsec/yr from the engine (detection only; engine rates run low)",
+    "known_as": "* eps Ind B",
+    "failed": [],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "significance": 13.3
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "known",
+     "reason": "This is * eps Ind B in SIMBAD (type BD*, 4.68 arcsec/yr), 1 arcsec from its position at that date."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 56 of 60 exposures (4 with halo, sur_error, transient). The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 60 frames aligned to Gaia, single-star scatter 0.46 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "Motion signal of 13.3 sigma from a fit over 60 exposures. A slow mover is not a separate spot in any single frame."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "na",
+     "reason": "Not applicable: the slow-mover search fits one straight line in time to the whole data set."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "pass",
+     "reason": "Also found in D2."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "No bright star close enough for its halo to reach here."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Found in the per-pixel time fit, with significance set by the field's own stars."
+    }
+   ]
+  },
+  "status": "known"
+ },
+ {
+  "id": 18,
+  "ra": 133.759399,
+  "dec": -7.242182,
+  "pm_ra": -6.174,
+  "pm_dec": 0.856,
+  "rate": null,
+  "frames_used": 45,
+  "checks": {
+   "summary": {
+    "label": "WISEA J085510.74-071442.5",
+    "kind": "slow",
+    "plate": "wise0855",
+    "field": "WISE 0855 field",
+    "detector": "D6",
+    "also_seen_in": [
+     "D5"
+    ],
+    "mjd": 61058.4655,
+    "date": "2026-01-18",
+    "motion": "6.23 arcsec/yr from the engine (detection only; engine rates run low)",
+    "known_as": "WISEA J085510.74-071442.5",
+    "failed": [],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "significance": 8.6
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "known",
+     "reason": "This is WISEA J085510.74-071442.5 in SIMBAD (type BD*, 8.15 arcsec/yr), 1 arcsec from its position at that date."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 37 of 45 exposures (8 with halo, nonfunc, persist, sur_error, transient). The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 45 frames aligned to Gaia, single-star scatter 0.39 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "Motion signal of 8.6 sigma from a fit over 45 exposures. A slow mover is not a separate spot in any single frame."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "na",
+     "reason": "Not applicable: the slow-mover search fits one straight line in time to the whole data set."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "pass",
+     "reason": "Also found in D5."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "No bright star close enough for its halo to reach here."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Found in the per-pixel time fit, with significance set by the field's own stars."
+    }
+   ]
+  },
+  "status": "known"
+ },
+ {
+  "id": 19,
+  "ra": 177.275598,
+  "dec": 1.530775,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 27.33,
+  "frames_used": 7,
+  "checks": {
+   "summary": {
+    "label": "Asteroid 120 Lachesis",
+    "kind": "fast",
+    "plate": "singapore",
+    "field": "Above Singapore",
+    "detector": "D2",
+    "also_seen_in": [
+     "D5"
+    ],
+    "mjd": 61029.1236,
+    "date": "2025-12-20",
+    "motion": "27.3 arcsec/hr over 17.9 hours",
+    "known_as": "asteroid 120 Lachesis",
+    "failed": [
+     "No bad pixels in the aperture"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 692.6,
+    "path": [
+     [
+      177.2072,
+      1.57084
+     ],
+     [
+      177.20753,
+      1.57058
+     ],
+     [
+      177.21743,
+      1.56493
+     ],
+     [
+      177.32351,
+      1.50246
+     ],
+     [
+      177.32414,
+      1.50227
+     ],
+     [
+      177.32513,
+      1.50175
+     ],
+     [
+      177.32424,
+      1.50258
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "known",
+     "reason": "This is asteroid 120 Lachesis (V 13.5), 1 arcsec from the JPL position at that time."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "fail",
+     "reason": "Flagged pixels (nonfunc, persist, sur_error, transient) in the aperture in 3 of 7 exposures."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 7 frames aligned to Gaia, single-star scatter 0.42 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "7 exposures at 5 sigma or more, strongest 693 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.6 arcsec over 3 visits; speed steady at 27.3 arcsec/hr between visits (within 0%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "pass",
+     "reason": "Also found in D5."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 49 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    }
+   ]
+  },
+  "status": "known"
+ },
+ {
+  "id": 20,
+  "ra": 269.440028,
+  "dec": 4.78665,
+  "pm_ra": -3.056,
+  "pm_dec": 0.702,
+  "rate": null,
+  "frames_used": 38,
+  "checks": {
+   "summary": {
+    "label": "Slow candidate, Barnard's Star field D3",
+    "kind": "slow",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D3",
+    "also_seen_in": [],
+    "mjd": 61024.8196,
+    "date": "2025-12-15",
+    "motion": "3.14 arcsec/yr from the engine (detection only; engine rates run low)",
+    "known_as": null,
+    "failed": [
+     "Not a known object",
+     "Star-like, and not in the halo of a bright star"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "significance": 6.3
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "fail",
+     "reason": "A Gaia star that moves only 0.01 arcsec/yr sits 5 arcsec away (G 13.6). The apparent motion is most likely an artifact of that star."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 33 of 38 exposures (5 with halo, persist, transient). The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 38 frames aligned to Gaia, single-star scatter 0.54 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "Motion signal of 6.3 sigma from a fit over 38 exposures. A slow mover is not a separate spot in any single frame."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "na",
+     "reason": "Not applicable: the slow-mover search fits one straight line in time to the whole data set."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "warn",
+     "reason": "D4 was searched the same way and does not find it."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "fail",
+     "reason": "It lies 71 arcsec from a bright star (G 8.2), inside its halo."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Found in the per-pixel time fit, with significance set by the field's own stars."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 21,
+  "ra": 269.445882,
+  "dec": 4.758317,
+  "pm_ra": -3.651,
+  "pm_dec": 3.394,
+  "rate": null,
+  "frames_used": 41,
+  "checks": {
+   "summary": {
+    "label": "Slow candidate, Barnard's Star field D4",
+    "kind": "slow",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D4",
+    "also_seen_in": [],
+    "mjd": 61006.0125,
+    "date": "2025-11-27",
+    "motion": "4.98 arcsec/yr from the engine (detection only; engine rates run low)",
+    "known_as": null,
+    "failed": [
+     "No bad pixels in the aperture",
+     "Star-like, and not in the halo of a bright star"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "significance": 6.0
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No moving object is listed here in Gaia DR3 or SIMBAD."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "fail",
+     "reason": "Flagged pixels (bloom, nonfunc, sur_error, transient) in the aperture in 16 of 41 exposures."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 41 frames aligned to Gaia, single-star scatter 0.35 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "Motion signal of 6.0 sigma from a fit over 41 exposures. A slow mover is not a separate spot in any single frame."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "na",
+     "reason": "Not applicable: the slow-mover search fits one straight line in time to the whole data set."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "warn",
+     "reason": "D3 was searched the same way and does not find it."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "fail",
+     "reason": "It lies 35 arcsec from a bright star (G 8.2), inside its halo."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Found in the per-pixel time fit, with significance set by the field's own stars."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 21,
+  "ra": 269.450899,
+  "dec": 4.760817,
+  "pm_ra": 7.086,
+  "pm_dec": 7.058,
+  "rate": null,
+  "frames_used": 41,
+  "checks": {
+   "summary": {
+    "label": "Slow candidate, Barnard's Star field D4",
+    "kind": "slow",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D4",
+    "also_seen_in": [],
+    "mjd": 61006.0125,
+    "date": "2025-11-27",
+    "motion": "10.00 arcsec/yr from the engine (detection only; engine rates run low)",
+    "known_as": null,
+    "failed": [
+     "No bad pixels in the aperture",
+     "Star-like, and not in the halo of a bright star"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "significance": 5.2
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No moving object is listed here in Gaia DR3 or SIMBAD."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "fail",
+     "reason": "Flagged pixels (bloom, halo, nonfunc, overflow, sur_error, transient) in the aperture in 39 of 41 exposures."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 41 frames aligned to Gaia, single-star scatter 0.35 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "Motion signal of 5.2 sigma from a fit over 41 exposures. A slow mover is not a separate spot in any single frame."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "na",
+     "reason": "Not applicable: the slow-mover search fits one straight line in time to the whole data set."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "warn",
+     "reason": "D3 was searched the same way and does not find it."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "fail",
+     "reason": "It lies 30 arcsec from a bright star (G 8.2), inside its halo."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Found in the per-pixel time fit, with significance set by the field's own stars."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 22,
+  "ra": 177.276999,
+  "dec": 1.565007,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 38.44,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, Above Singapore D5, 2025-05-17",
+    "kind": "fast",
+    "plate": "singapore",
+    "field": "Above Singapore",
+    "detector": "D5",
+    "also_seen_in": [],
+    "mjd": 60812.6332,
+    "date": "2025-05-17",
+    "motion": "38.4 arcsec/hr over 16.4 hours",
+    "known_as": null,
+    "failed": [],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 11.3,
+    "path": [
+     [
+      177.21897,
+      1.59091
+     ],
+     [
+      177.2338,
+      1.58441
+     ],
+     [
+      177.37823,
+      1.51969
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 3 of 3 exposures. The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.34 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 11 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.3 arcsec over 3 visits; speed steady at 37.5 arcsec/hr between visits (within 6%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "warn",
+     "reason": "D2 took 7 exposures during those hours and shows nothing on this path."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 4 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    }
+   ]
+  },
+  "status": "passed_checks"
+ },
+ {
+  "id": 23,
+  "ra": 177.206744,
+  "dec": 1.584705,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 57.47,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, Above Singapore D5, 2025-12-19",
+    "kind": "fast",
+    "plate": "singapore",
+    "field": "Above Singapore",
+    "detector": "D5",
+    "also_seen_in": [],
+    "mjd": 61028.9588,
+    "date": "2025-12-19",
+    "motion": "57.5 arcsec/hr over 17.8 hours",
+    "known_as": null,
+    "failed": [
+     "No bad pixels in the aperture"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 14.2,
+    "path": [
+     [
+      177.1744,
+      1.68263
+     ],
+     [
+      177.18134,
+      1.65878
+     ],
+     [
+      177.26448,
+      1.4127
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "fail",
+     "reason": "Flagged pixels (halo) in the aperture in 1 of 3 exposures."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.31 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 14 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.8 arcsec over 3 visits; speed steady at 58.3 arcsec/hr between visits (within 3%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "warn",
+     "reason": "D2 took 3 exposures during those hours and shows nothing on this path."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 5 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 24,
+  "ra": 133.759795,
+  "dec": -7.23581,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 26.83,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, WISE 0855 field D5, 2025-11-07",
+    "kind": "fast",
+    "plate": "wise0855",
+    "field": "WISE 0855 field",
+    "detector": "D5",
+    "also_seen_in": [],
+    "mjd": 60986.7204,
+    "date": "2025-11-07",
+    "motion": "26.8 arcsec/hr over 13.2 hours",
+    "known_as": null,
+    "failed": [
+     "No bad pixels in the aperture"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 10.6,
+    "path": [
+     [
+      133.69975,
+      -7.22134
+     ],
+     [
+      133.78351,
+      -7.24112
+     ],
+     [
+      133.79613,
+      -7.24496
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "fail",
+     "reason": "Flagged pixels (edge, nonfunc) in the aperture in 1 of 3 exposures."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.47 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 11 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.6 arcsec over 3 visits; speed steady at 27.6 arcsec/hr between visits (within 6%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "na",
+     "reason": "D6 did not look at this spot during those hours."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 3 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 25,
+  "ra": 133.776925,
+  "dec": -7.231585,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 35.54,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, WISE 0855 field D6, 2025-11-14",
+    "kind": "fast",
+    "plate": "wise0855",
+    "field": "WISE 0855 field",
+    "detector": "D6",
+    "also_seen_in": [],
+    "mjd": 60993.6662,
+    "date": "2025-11-14",
+    "motion": "35.5 arcsec/hr over 9.8 hours",
+    "known_as": null,
+    "failed": [],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 18.2,
+    "path": [
+     [
+      133.78662,
+      -7.26843
+     ],
+     [
+      133.78191,
+      -7.25142
+     ],
+     [
+      133.76224,
+      -7.17491
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 3 of 3 exposures. The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.51 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 18 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.4 arcsec over 3 visits; speed steady at 36.4 arcsec/hr between visits (within 6%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "na",
+     "reason": "D5 did not look at this spot during those hours."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 4 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    }
+   ]
+  },
+  "status": "passed_checks"
+ },
+ {
+  "id": 26,
+  "ra": 269.458647,
+  "dec": 4.850872,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 1.87,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, Barnard's Star field D4, 2026-03-11",
+    "kind": "fast",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D4",
+    "also_seen_in": [],
+    "mjd": 61110.5217,
+    "date": "2026-03-11",
+    "motion": "1.9 arcsec/hr over 16.3 hours",
+    "known_as": null,
+    "failed": [
+     "No bad pixels in the aperture",
+     "Positions on a straight line at a steady rate",
+     "Star-like, and not in the halo of a bright star",
+     "Not one of many thin tracks from one night"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 49.5,
+    "path": [
+     [
+      269.45835,
+      4.85618
+     ],
+     [
+      269.4586,
+      4.84916
+     ],
+     [
+      269.45898,
+      4.84728
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "fail",
+     "reason": "Flagged pixels (edge) in the aperture in 1 of 3 exposures."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.40 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 49 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "fail",
+     "reason": "Scatter about the line 1.6 arcsec over 3 visits, but the speed changes from 1.7 to 4.2 arcsec/hr between visits."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "na",
+     "reason": "D3 did not look at this spot during those hours."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "fail",
+     "reason": "It lies 14 arcsec from a bright star (G 12.5), inside its halo."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    },
+    {
+     "key": "crowd",
+     "title": "Not one of many thin tracks from one night",
+     "result": "fail",
+     "reason": "This is one of 6 tracks from the same night in this field, each with only 3 exposures. Chance line-ups of leftover residuals look like this."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 27,
+  "ra": 269.451382,
+  "dec": 4.834119,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 41.79,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, Barnard's Star field D4, 2026-03-11",
+    "kind": "fast",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D4",
+    "also_seen_in": [],
+    "mjd": 61110.3658,
+    "date": "2026-03-11",
+    "motion": "41.8 arcsec/hr over 11.3 hours",
+    "known_as": null,
+    "failed": [
+     "Not one of many thin tracks from one night"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 255.8,
+    "path": [
+     [
+      269.38254,
+      4.80251
+     ],
+     [
+      269.46954,
+      4.84185
+     ],
+     [
+      269.50208,
+      4.858
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 3 of 3 exposures. The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.41 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 256 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.8 arcsec over 3 visits; speed steady at 41.6 arcsec/hr between visits (within 2%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "na",
+     "reason": "D3 did not look at this spot during those hours."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 13 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    },
+    {
+     "key": "crowd",
+     "title": "Not one of many thin tracks from one night",
+     "result": "fail",
+     "reason": "This is one of 6 tracks from the same night in this field, each with only 3 exposures. Chance line-ups of leftover residuals look like this."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 28,
+  "ra": 269.486791,
+  "dec": 4.786362,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 10.77,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, Barnard's Star field D4, 2026-03-11",
+    "kind": "fast",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D4",
+    "also_seen_in": [],
+    "mjd": 61110.4324,
+    "date": "2026-03-11",
+    "motion": "10.8 arcsec/hr over 13.0 hours",
+    "known_as": null,
+    "failed": [
+     "Not one of many thin tracks from one night"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 65.3,
+    "path": [
+     [
+      269.47026,
+      4.77614
+     ],
+     [
+      269.48657,
+      4.78621
+     ],
+     [
+      269.50354,
+      4.79674
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 3 of 3 exposures. The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.40 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 65 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.5 arcsec over 3 visits; speed steady at 10.8 arcsec/hr between visits (within 9%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "na",
+     "reason": "D3 did not look at this spot during those hours."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 10 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    },
+    {
+     "key": "crowd",
+     "title": "Not one of many thin tracks from one night",
+     "result": "fail",
+     "reason": "This is one of 6 tracks from the same night in this field, each with only 3 exposures. Chance line-ups of leftover residuals look like this."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 29,
+  "ra": 269.382308,
+  "dec": 4.797615,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 50.49,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, Barnard's Star field D4, 2026-03-11",
+    "kind": "fast",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D4",
+    "also_seen_in": [],
+    "mjd": 61110.5468,
+    "date": "2026-03-11",
+    "motion": "50.5 arcsec/hr over 4.9 hours",
+    "known_as": null,
+    "failed": [
+     "Not one of many thin tracks from one night"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 481.9,
+    "path": [
+     [
+      269.36648,
+      4.76289
+     ],
+     [
+      269.38494,
+      4.80479
+     ],
+     [
+      269.39551,
+      4.82516
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 3 of 3 exposures. The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.37 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 482 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.7 arcsec over 3 visits; speed steady at 50.3 arcsec/hr between visits (within 2%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "na",
+     "reason": "D3 did not look at this spot during those hours."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 14 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    },
+    {
+     "key": "crowd",
+     "title": "Not one of many thin tracks from one night",
+     "result": "fail",
+     "reason": "This is one of 6 tracks from the same night in this field, each with only 3 exposures. Chance line-ups of leftover residuals look like this."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 30,
+  "ra": 269.517749,
+  "dec": 4.763092,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 79.78,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, Barnard's Star field D4, 2026-03-11",
+    "kind": "fast",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D4",
+    "also_seen_in": [],
+    "mjd": 61110.5458,
+    "date": "2026-03-11",
+    "motion": "79.8 arcsec/hr over 4.8 hours",
+    "known_as": null,
+    "failed": [
+     "Not one of many thin tracks from one night"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 29.0,
+    "path": [
+     [
+      269.52987,
+      4.70619
+     ],
+     [
+      269.51553,
+      4.77391
+     ],
+     [
+      269.50785,
+      4.80917
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 3 of 3 exposures. The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.40 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 29 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.2 arcsec over 3 visits; speed steady at 79.3 arcsec/hr between visits (within 3%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "na",
+     "reason": "D3 did not look at this spot during those hours."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 6 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    },
+    {
+     "key": "crowd",
+     "title": "Not one of many thin tracks from one night",
+     "result": "fail",
+     "reason": "This is one of 6 tracks from the same night in this field, each with only 3 exposures. Chance line-ups of leftover residuals look like this."
+    }
+   ]
+  },
+  "status": "flagged"
+ },
+ {
+  "id": 31,
+  "ra": 269.516252,
+  "dec": 4.73846,
+  "pm_ra": null,
+  "pm_dec": null,
+  "rate": 46.46,
+  "frames_used": 3,
+  "checks": {
+   "summary": {
+    "label": "Fast track, Barnard's Star field D4, 2026-03-11",
+    "kind": "fast",
+    "plate": "barnard",
+    "field": "Barnard's Star field",
+    "detector": "D4",
+    "also_seen_in": [],
+    "mjd": 61110.5468,
+    "date": "2026-03-11",
+    "motion": "46.5 arcsec/hr over 4.8 hours",
+    "known_as": null,
+    "failed": [
+     "Not one of many thin tracks from one night"
+    ],
+    "source": "Engine output on real SPHEREx Data Release 1 exposures (scripts/seed_candidates.py)",
+    "peak_sigma": 88.3,
+    "path": [
+     [
+      269.49018,
+      4.76036
+     ],
+     [
+      269.52015,
+      4.73444
+     ],
+     [
+      269.53843,
+      4.72058
+     ]
+    ]
+   },
+   "items": [
+    {
+     "key": "known",
+     "title": "Not a known object",
+     "result": "pass",
+     "reason": "No asteroid or comet brighter than V 21 is within 30 arcsec in JPL Small-Body Identification."
+    },
+    {
+     "key": "flags",
+     "title": "No bad pixels in the aperture",
+     "result": "pass",
+     "reason": "Clean aperture in 3 of 3 exposures. The outlier flag is ignored because the pipeline sets it on moving objects."
+    },
+    {
+     "key": "astrometry",
+     "title": "Astrometry checked in the frames used",
+     "result": "pass",
+     "reason": "All 3 frames aligned to Gaia, single-star scatter 0.40 arcsec. FINAST is 0 in every Data Release 1 header we have read, so each frame is checked against Gaia stars instead."
+    },
+    {
+     "key": "significance",
+     "title": "Seen at 5 sigma or more in at least three frames",
+     "result": "pass",
+     "reason": "3 exposures at 5 sigma or more, strongest 88 sigma."
+    },
+    {
+     "key": "line",
+     "title": "Positions on a straight line at a steady rate",
+     "result": "pass",
+     "reason": "Scatter about the line 1.8 arcsec over 3 visits; speed steady at 46.8 arcsec/hr between visits (within 3%)."
+    },
+    {
+     "key": "detectors",
+     "title": "Seen in more than one detector where coverage allows",
+     "result": "na",
+     "reason": "D3 did not look at this spot during those hours."
+    },
+    {
+     "key": "shape",
+     "title": "Star-like, and not in the halo of a bright star",
+     "result": "pass",
+     "reason": "Compact patches (median 6 grid pixels) and no bright star nearby."
+    },
+    {
+     "key": "engine",
+     "title": "Survives the clean-difference engine",
+     "result": "pass",
+     "reason": "Every detection is above 5 sigma against that pixel's own measured noise."
+    },
+    {
+     "key": "crowd",
+     "title": "Not one of many thin tracks from one night",
+     "result": "fail",
+     "reason": "This is one of 6 tracks from the same night in this field, each with only 3 exposures. Chance line-ups of leftover residuals look like this."
+    }
+   ]
+  },
+  "status": "flagged"
+ }
+]

@@ -7,7 +7,8 @@ const PLATE = [243, 239, 230];
 const INK = [26, 24, 21];
 const NIGHT = [12, 12, 14];
 const LIGHT = [240, 236, 226];
-const MARK = "#c8102e";
+// The same red, lightened on the dark sky so labels keep their contrast
+const MARKS = { plate: "#c8102e", sky: "#ff6b7d" };
 
 // Difference tones: background, "was here", "is here now"
 const DIFF_TONES = {
@@ -136,8 +137,8 @@ function drawMarkings(ctx, side, view) {
   ctx.fillText("N up, E left", 10 * dpr, 16 * dpr);
 
   // Target: catalogue path, ring at the frame date, measured positions
-  ctx.strokeStyle = MARK;
-  ctx.fillStyle = MARK;
+  ctx.strokeStyle = MARKS[view.look];
+  ctx.fillStyle = MARKS[view.look];
   if (meta.catalogue && meta.catalogue.published_rate !== null) {
     const first = view.frames[0].mjd;
     const last = view.frames[view.frames.length - 1].mjd;
@@ -184,6 +185,30 @@ function drawMarkings(ctx, side, view) {
     ctx.stroke();
     ctx.fillText(`c${i + 1}`, x + r + 3 * dpr, y - r + 4 * dpr);
   });
+
+  // Selected candidate: a red diamond, its label, and its path if it is a fast track
+  if (view.selected) {
+    const summary = view.selected.checks.summary;
+    const [x, y] = at(view.selected.ra, view.selected.dec);
+    const r = 13 * dpr;
+    ctx.beginPath();
+    ctx.moveTo(x, y - r);
+    ctx.lineTo(x + r, y);
+    ctx.lineTo(x, y + r);
+    ctx.lineTo(x - r, y);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fillText("candidate", x + r + 4 * dpr, y + r);
+    if (summary.path) {
+      ctx.beginPath();
+      summary.path.forEach(([ra, dec], i) => {
+        const [px, py] = at(ra, dec);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+    }
+  }
 
   // Picked point: a red corner bracket with a label
   if (view.pick) {

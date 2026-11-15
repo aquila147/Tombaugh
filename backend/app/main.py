@@ -95,6 +95,15 @@ def field_status(job_id: str) -> dict:
     return job
 
 
+@app.get("/api/check")
+def check_position(ra: float, dec: float, job_id: str) -> dict:
+    """Automatic checks for the engine candidate nearest a position in a job's field."""
+    found = jobs.check_at(job_id, ra, dec)
+    if found is None:
+        raise HTTPException(status_code=404, detail="no finished job with that id")
+    return found
+
+
 # Plates built by live jobs, read by the viewer exactly like the stored ones
 jobs.FIELDS_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/api/files", StaticFiles(directory=jobs.FIELDS_DIR), name="files")

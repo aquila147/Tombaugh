@@ -140,6 +140,16 @@ def search(
     path = config.CACHE_DIR / "search" / name
     if path.is_file():
         return json.loads(path.read_text())
+    # A saved list for more releases at the same position holds this one too
+    prefix = f"{ra:.4f}_{dec:+.4f}_{radius_deg:.4f}_"
+    for other in path.parent.glob(prefix + "*.json"):
+        saved = other.stem[len(prefix) :].split("-")
+        if all(c in saved for c in collections):
+            return [
+                p
+                for p in json.loads(other.read_text())
+                if p["collection"] in collections
+            ]
 
     # Earlier collections in the list win when an exposure is in both
     seen: dict[tuple[str, str], dict] = {}

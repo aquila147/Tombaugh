@@ -17,13 +17,14 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <a class="skip" href="#log">Skip to controls</a>
     <main class="plate-wrap" id="plate-wrap">
       <canvas id="plate" role="img" tabindex="0" aria-label="Sky plate, loading"></canvas>
       <p class="plate-note" id="plate-note" role="status">Loading plate.</p>
       <p class="frame-line" id="frame-line" aria-live="off"></p>
     </main>
 
-    <aside class="log" id="log">
+    <aside class="log" id="log" tabindex="-1" aria-label="Logbook and controls">
       <header class="sleeve">
         <h1 class="wordmark">Tombaugh</h1>
         <p class="tagline">What's moving above you?</p>
@@ -99,7 +100,8 @@
         </div>
         <p class="keys">
           Keys: space play, arrows step, B blink, D difference, S stack, E before or after,
-          P plate or sky, G Gaia.
+          P plate or sky, G Gaia. With the plate focused, Enter reads the spectrum at the
+          marked object.
         </p>
       </section>
 
@@ -121,9 +123,46 @@
         <dl class="facts" id="motion"></dl>
       </section>
 
+      <section aria-labelledby="h-cand">
+        <h2 id="h-cand">Candidates on this plate</h2>
+        <p class="caption" id="cand-source"></p>
+        <div class="row" id="cand-list"></div>
+        <div id="cand-card" hidden>
+          <h3 id="cand-title"></h3>
+          <p class="caption" id="cand-motion"></p>
+          <ol class="ladder" id="cand-ladder" aria-label="Status"></ol>
+          <ul class="checks" id="cand-checks" aria-label="Automatic checks"></ul>
+          <p class="caption" id="cand-votes"></p>
+          <div class="row">
+            <button id="b-vote-real" disabled>Looks real</button>
+            <button id="b-vote-artifact" disabled>Looks like an artifact</button>
+          </div>
+          <p class="result" id="vote-result" role="status" hidden></p>
+          <div class="row">
+            <button id="b-export-json">Evidence, JSON</button>
+            <button id="b-export-png">Evidence, PNG</button>
+          </div>
+          <p class="caption">
+            Tombaugh reports candidates only and never sends anything to an agency or survey
+            itself. If you are an expert and think one deserves a closer look, the proper
+            places are
+            <a href="https://www.zooniverse.org/projects/marckuchner/backyard-worlds-planet-9" rel="noopener">Backyard Worlds: Planet 9</a>
+            for slow, faint movers such as brown dwarfs, and the
+            <a href="https://www.minorplanetcenter.net/" rel="noopener">Minor Planet Center</a>
+            for asteroids and comets.
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="h-map">
+        <h2 id="h-map">Sky searched by the public</h2>
+        <canvas id="skymap" class="plot" role="img" aria-label="All-sky map, loading"></canvas>
+        <p class="caption" id="sky-count">Loading the map.</p>
+      </section>
+
       <section aria-labelledby="h-spec">
         <h2 id="h-spec">Spectrum and light curve</h2>
-        <p class="caption" id="spec-hint">Click a point on the plate.</p>
+        <p class="caption" id="spec-hint">Click a point on the plate, or focus the plate and press Enter.</p>
         <canvas id="plot-spec" class="plot" role="img" aria-label="Spectrum, empty"></canvas>
         <canvas id="plot-time" class="plot" role="img" aria-label="Light curve, empty"></canvas>
         <p class="caption" id="spec-note" hidden>

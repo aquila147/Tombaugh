@@ -1,0 +1,32 @@
+{
+  "field": "Epsilon Indi B",
+  "detector": "D2",
+  "collection": "spherex_dr1",
+  "exposures_in_field": 64,
+  "stars": [
+    {
+      "gaia_g": 13.0,
+      "exposures": 29,
+      "total_brightness_rms_percent": 2.6,
+      "total_brightness_rms_after_wavelength_trend_percent": 2.2,
+      "centre_pixel_rms_percent": 26.4,
+      "centre_pixel_rms_after_wavelength_trend_percent": 25.5
+    },
+    {
+      "gaia_g": 13.0,
+      "exposures": 29,
+      "total_brightness_rms_percent": 6.3,
+      "total_brightness_rms_after_wavelength_trend_percent": 2.9,
+      "centre_pixel_rms_percent": 22.6,
+      "centre_pixel_rms_after_wavelength_trend_percent": 20.2
+    },
+    {
+      "gaia_g": 13.9,
+      "exposures": 34,
+      "total_brightness_rms_percent": 6.6,
+      "total_brightness_rms_after_wavelength_trend_percent": 4.5,
+      "centre_pixel_rms_percent": 28.0,
+      "centre_pixel_rms_after_wavelength_trend_percent": 27.2
+    }
+  ]
+}

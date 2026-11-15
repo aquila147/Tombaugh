@@ -40,15 +40,17 @@ def detections_table(maps: list[dict], key: str) -> dict:
                     peak["y"] * config.GRID_PIXEL_ARCSEC,
                     frame_index,
                     peak["snr"],
+                    peak["area"],
                 )
             )
-    table = np.array(rows, dtype=float).reshape(-1, 5)
+    table = np.array(rows, dtype=float).reshape(-1, 6)
     return {
         "t": table[:, 0],
         "x": table[:, 1],
         "y": table[:, 2],
         "frame": table[:, 3].astype(int),
         "snr": table[:, 4],
+        "area": table[:, 5],
     }
 
 

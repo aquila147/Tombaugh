@@ -1,16 +1,18 @@
 import { API_URL } from "../config.js";
+import { castVote, drawSkyMap, loadCandidates, loadSearches, logSearch } from "./community.js";
 import { loadEngine, loadIndex, loadTarget } from "./data.js";
 import { render, stackValues } from "./player.js";
 import { drawPlot } from "./plots.js";
 import { fieldCentre, parsePlace, zenith } from "./overhead.js";
-import { formatCoord, imageToSky, project } from "./sky.js";
+import { formatCoord, imageToSky, positionAt, project, skyToImage } from "./sky.js";
 
 const $ = (id) => document.getElementById(id);
 const canvas = $("plate");
 const params = new URLSearchParams(location.search);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const SPEEDS = [1, 2, 4, 8];
-const BLINK_MS = 500;
+// Slower blink and playback for visitors who ask for reduced motion
+const BLINK_MS = reducedMotion ? 1200 : 500;
 const LIVE_FOV_DEG = 0.2;
 const MODES = ["frames", "diff", "stack"];
 
@@ -28,7 +30,7 @@ const state = {
   look: "plate",
   playing: false,
   blinking: false,
-  speed: 2,
+  speed: reducedMotion ? 1 : 2,
   showGaia: true,
   pick: null,
   stacks: {},
@@ -36,6 +38,9 @@ const state = {
   side: "after",
   base: undefined,
   apiOn: false,
+  candidates: [],
+  candidatesLive: false,
+  selected: null,
   engine: null,
   visits: [],
 };
@@ -71,6 +76,8 @@ async function openTarget(id, base) {
   const releases = new Set(state.all.flatMap((f) => f.collections));
   state.mixed = releases.size > 1;
   note("");
+  state.selected = null;
+  drawCandidates();
   if (wantEngine) await showEngine(state.side);
   if (!reducedMotion && state.mode === "frames") play();
   draw();
@@ -160,6 +167,7 @@ function draw() {
     side: state.side,
     showGaia: state.showGaia,
     pick: state.pick,
+    selected: state.selected,
   });
   drawFacts(frame);
 }
@@ -379,6 +387,22 @@ function pickPoint(event) {
   const size = state.meta.size;
   const col = Math.floor(((event.clientX - box.left) / box.width) * size);
   const row = Math.floor(((event.clientY - box.top) / box.height) * size);
+  pickPixel(col, row);
+}
+
+// Keyboard way to pick: the selected candidate, else the ringed target, else the centre.
+function pickFromKeyboard() {
+  if (!state.meta) return;
+  const frame = state.frames[state.index];
+  let where = [state.meta.ra, state.meta.dec];
+  if (state.selected) where = [state.selected.ra, state.selected.dec];
+  else if (state.meta.catalogue) where = positionAt(state.meta.catalogue, frame.mjd);
+  const [col, row] = skyToImage(state.meta, where[0], where[1]);
+  pickPixel(Math.round(col), Math.round(row));
+}
+
+function pickPixel(col, row) {
+  const size = state.meta.size;
   if (col < 0 || row < 0 || col >= size || row >= size) return;
   state.pick = { col, row };
   const [ra, dec] = imageToSky(state.meta, col, row);
@@ -436,6 +460,182 @@ async function chooseTarget() {
   return (state.targets.find((t) => t.demo) || state.targets[0]).id;
 }
 
+// --- Candidates ---
+
+const LADDER = [
+  ["flagged", "1. Flagged: did not pass every automatic check"],
+  ["passed_checks", "2. Passed automatic checks"],
+  ["community_confirmed", "3. Confirmed by community"],
+  ["team_reviewed", "4. Reviewed by team"],
+];
+const OUTCOMES = {
+  known: "Outcome: known object",
+  artifact: "Outcome: artifact",
+  unexplained: "Outcome: unexplained candidate",
+};
+
+async function refreshCandidates() {
+  const { rows, live } = await loadCandidates();
+  state.candidates = rows;
+  state.candidatesLive = live;
+  drawCandidates();
+}
+
+function candidatesHere() {
+  if (!state.meta) return [];
+  const half = (state.meta.fov_deg * 3600) / 2;
+  return state.candidates.filter((c) => {
+    const [east, north] = project(c.ra, c.dec, state.meta.ra, state.meta.dec);
+    return Math.max(Math.abs(east), Math.abs(north)) < half;
+  });
+}
+
+function drawCandidates() {
+  const here = candidatesHere();
+  const where = state.candidatesLive ? "the shared candidate list" : "the copy stored with the site (votes are off)";
+  $("cand-source").textContent = here.length
+    ? `${here.length} from ${where}. Each came out of the engine on real exposures; the status says what the checks found.`
+    : "The engine has no stored candidate on this plate.";
+  $("cand-list").innerHTML = "";
+  for (const c of here) {
+    const button = document.createElement("button");
+    const status = c.status.replace("_", " ");
+    button.textContent = `${c.checks.summary.label} [${status}]`;
+    button.setAttribute("aria-pressed", String(state.selected === c));
+    button.addEventListener("click", () => selectCandidate(state.selected === c ? null : c));
+    $("cand-list").append(button);
+  }
+  if (state.selected && !here.includes(state.selected)) state.selected = null;
+  drawCard();
+}
+
+function selectCandidate(candidate) {
+  state.selected = candidate;
+  if (candidate && candidate.checks.summary.kind === "fast" && state.mode !== "engine") {
+    // Jump to the frame closest in time to the track
+    stop();
+    let best = 0;
+    state.frames.forEach((f, i) => {
+      if (Math.abs(f.mjd - candidate.checks.summary.mjd) < Math.abs(state.frames[best].mjd - candidate.checks.summary.mjd)) best = i;
+    });
+    state.index = best;
+  }
+  $("vote-result").hidden = true;
+  drawCandidates();
+  draw();
+}
+
+function drawCard() {
+  const c = state.selected;
+  $("cand-card").hidden = !c;
+  if (!c) return;
+  const summary = c.checks.summary;
+  $("cand-title").textContent = summary.label;
+  const also = summary.also_seen_in.length ? `, also found in ${summary.also_seen_in.join(", ")}` : "";
+  $("cand-motion").textContent = `${formatCoord(c.ra, c.dec)}. ${summary.motion}. ${summary.field}, ${summary.detector}${also}, ${c.frames_used} exposures.`;
+
+  const ladder = $("cand-ladder");
+  ladder.innerHTML = "";
+  for (const [key, text] of LADDER) {
+    const li = document.createElement("li");
+    li.textContent = c.status === key ? `${text} (now)` : text;
+    if (c.status === key) li.className = "now";
+    ladder.append(li);
+  }
+  const outcome = document.createElement("li");
+  if (OUTCOMES[c.status]) {
+    const how = c.status === "known" ? ", set by the automatic catalogue check" : ", set by the team";
+    outcome.textContent = `${OUTCOMES[c.status]} (now${how})`;
+    outcome.className = "now";
+  } else {
+    outcome.textContent = "Outcome: known object, artifact or unexplained candidate. Not decided yet.";
+  }
+  ladder.append(outcome);
+
+  const list = $("cand-checks");
+  list.innerHTML = "";
+  for (const check of c.checks.items) {
+    const li = document.createElement("li");
+    const tag = document.createElement("span");
+    tag.className = `tag ${check.result}`;
+    tag.textContent = { na: "n/a", warn: "note" }[check.result] || check.result;
+    li.append(tag, `${check.title}. ${check.reason}`);
+    list.append(li);
+  }
+
+  const canVote = state.candidatesLive && c.id != null && c.checks.items.length > 0 && c.status !== "known";
+  const real = c.real_votes || 0;
+  const artifact = c.artifact_votes || 0;
+  let votes = `Community votes: ${real} real, ${artifact} artifact.`;
+  if (c.status === "known") votes += " Voting is closed because this is a known object.";
+  else if (!state.candidatesLive) votes += " Voting is unavailable while the shared list cannot be reached.";
+  $("cand-votes").textContent = votes;
+  $("b-vote-real").disabled = !canVote;
+  $("b-vote-artifact").disabled = !canVote;
+}
+
+async function vote(kind) {
+  if (!state.selected) return;
+  $("b-vote-real").disabled = true;
+  $("b-vote-artifact").disabled = true;
+  const id = state.selected.id;
+  const message = await castVote(id, kind);
+  await refreshCandidates();
+  state.selected = state.candidates.find((c) => c.id === id) || null;
+  drawCandidates();
+  $("vote-result").textContent = message;
+  $("vote-result").hidden = false;
+}
+
+function download(name, blob) {
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = name;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+// Evidence card: what the plate shows and what the checks said. Nothing is sent anywhere.
+function exportEvidence(kind) {
+  const c = state.selected;
+  if (!c) return;
+  const name = `tombaugh-candidate-${c.id ?? "local"}`;
+  if (kind === "png") {
+    canvas.toBlob((blob) => download(`${name}.png`, blob));
+    return;
+  }
+  const frame = state.frames[state.index];
+  const card = {
+    tool: "Tombaugh",
+    note: "A candidate report, not a confirmed object. Tombaugh submits nothing to any agency.",
+    exported_utc: new Date().toISOString(),
+    candidate: c,
+    plate: { name: state.meta.name, ra: state.meta.ra, dec: state.meta.dec, fov_deg: state.meta.fov_deg },
+    frame_shown: { date: frame.date, detector: frame.detector, wavelength_um: frame.wavelength_um, mode: state.mode },
+    link: location.href,
+    where_experts_go: {
+      slow_movers: "https://www.zooniverse.org/projects/marckuchner/backyard-worlds-planet-9",
+      asteroids_and_comets: "https://www.minorplanetcenter.net/",
+    },
+  };
+  download(`${name}.json`, new Blob([JSON.stringify(card, null, 2)], { type: "application/json" }));
+}
+
+// --- Public sky map ---
+
+async function refreshSkyMap() {
+  const searches = await loadSearches();
+  const plates = state.targets.filter((t) => t.centre);
+  const patches = drawSkyMap($("skymap"), searches, plates);
+  if (searches === null) {
+    $("sky-count").textContent = "The shared map cannot be reached right now. Circles are the stored plates.";
+    $("skymap").setAttribute("aria-label", "All-sky map showing the stored plates only");
+    return;
+  }
+  $("sky-count").textContent = `${patches} patches of sky searched by the public, from ${searches.length} lookups. Squares are 3 degree patches; circles are the stored plates. No locations are kept.`;
+  $("skymap").setAttribute("aria-label", `All-sky map: ${patches} patches searched by the public`);
+}
+
 // --- Your sky ---
 
 function findPlate(ra, dec) {
@@ -458,6 +658,8 @@ function addAction(label, run) {
 function lookUp(place) {
   const [ra, dec] = zenith(place.lat, place.lon, new Date());
   const [fieldRa, fieldDec] = fieldCentre(ra, dec);
+  // Adds a coarse patch to the public map; never the place itself
+  logSearch(fieldRa, fieldDec, place.label === "you" ? "overhead" : "manual").then((ok) => ok && refreshSkyMap());
   $("above-actions").innerHTML = "";
   let text = `Straight above ${place.label} right now: ${formatCoord(fieldRa, fieldDec)}. `;
   const plate = findPlate(ra, dec);
@@ -534,6 +736,8 @@ async function startLive(ra, dec) {
       state.targets.push({ id: job.field_id, name: job.name, centre: job.centre, base });
     }
     await openTarget(job.field_id, base);
+    // The back end has just stored this plate's candidates
+    refreshCandidates();
   } catch (err) {
     note(`The live lookup did not finish: ${err.message}. Stored plates still work.`);
   }
@@ -561,6 +765,10 @@ function wire() {
   $("b-gaia").addEventListener("click", () => ((state.showGaia = !state.showGaia), draw()));
   canvas.addEventListener("click", pickPoint);
   $("b-above").addEventListener("click", lookUpHere);
+  $("b-vote-real").addEventListener("click", () => vote("real"));
+  $("b-vote-artifact").addEventListener("click", () => vote("artifact"));
+  $("b-export-json").addEventListener("click", () => exportEvidence("json"));
+  $("b-export-png").addEventListener("click", () => exportEvidence("png"));
   $("b-place").addEventListener("click", lookUpTyped);
   $("place").addEventListener("keydown", (event) => {
     if (event.key === "Enter") lookUpTyped();
@@ -569,6 +777,11 @@ function wire() {
   document.addEventListener("keydown", (event) => {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     if (event.target instanceof HTMLInputElement) return;
+    if (event.key === "Enter" && event.target === canvas) {
+      event.preventDefault();
+      pickFromKeyboard();
+      return;
+    }
     if (event.target instanceof HTMLButtonElement && event.key === " ") return;
     const key = event.key.toLowerCase();
     const actions = {
@@ -596,6 +809,10 @@ function wire() {
 
 async function checkApi() {
   const el = $("api-status");
+  if (!API_URL) {
+    el.textContent = "off. Stored plates still work.";
+    return;
+  }
   try {
     const body = await (await fetch(`${API_URL}/api/health`)).json();
     state.apiOn = body.status === "ok";
@@ -624,6 +841,8 @@ async function start() {
   }
   const id = await chooseTarget();
   drawTargets();
+  refreshCandidates();
+  refreshSkyMap();
   if (!id) {
     // A shared link to a patch without a stored plate: build it if the back end is up
     await apiChecked;

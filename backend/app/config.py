@@ -169,3 +169,29 @@ LIVE_MIN_FRAMES = 8
 LIVE_MAX_CANDIDATES = 10
 # If the archive search is down, reuse a saved exposure list this close by
 LIVE_REUSE_SEARCH_DEG = 0.6
+
+# --- SIMBAD ---
+
+SIMBAD_TAP_URLS = [
+    "https://simbad.cds.unistra.fr/simbad/sim-tap/sync",
+    "https://simbad.harvard.edu/simbad/sim-tap/sync",
+]
+SIMBAD_CONE_DEG = 0.12
+
+# --- Candidate checks ---
+
+CHECK_SB_HALF_WIDTH_DEG = 0.5
+CHECK_SB_MATCH_ARCSEC = 30.0
+CHECK_STAR_MATCH_ARCSEC = 9.0
+CHECK_SIMBAD_MATCH_ARCSEC = 15.0
+CHECK_EDGE_PIX = 3
+# Slow movers: fail when more than this fraction of exposures has bad pixels there
+CHECK_FLAG_FRACTION = 0.3
+CHECK_LINE_RMS_ARCSEC = 3.0
+CHECK_RATE_SPREAD = 0.3
+CHECK_MAX_AREA_PIX = 150
+# (Gaia G limit, halo radius in arcsec)
+CHECK_HALO_RADII = [(9.0, 90.0), (11.0, 45.0), (13.0, 20.0)]
+CHECK_CROWD_TRACKS = 3
+# A click this close to an engine candidate shows that candidate's checks
+CHECK_CLICK_ARCSEC = 20.0
