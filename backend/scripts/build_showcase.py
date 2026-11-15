@@ -171,6 +171,7 @@ def build_target(key: str) -> dict:
     fit = motion["fit"]
     summary = {
         "name": target["name"],
+        "centre": [ra, dec, FOV_DEG],
         "detectors": target["detectors"],
         "stacks": len(stacks),
         "alignment": align,

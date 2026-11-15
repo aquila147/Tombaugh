@@ -17,19 +17,100 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <header class="sleeve">
-      <h1 class="wordmark">Tombaugh</h1>
-      <p class="tagline">What's moving above you?</p>
-    </header>
-
-    <main class="plate" id="plate" aria-label="Sky plate">
-      <p class="plate-note">Plate not loaded yet.</p>
+    <main class="plate-wrap" id="plate-wrap">
+      <canvas id="plate" role="img" tabindex="0" aria-label="Sky plate, loading"></canvas>
+      <p class="plate-note" id="plate-note" role="status">Loading plate.</p>
+      <p class="frame-line" id="frame-line" aria-live="off"></p>
     </main>
 
-    <footer class="logline">
-      <span>API</span>
-      <span id="api-status" role="status">checking</span>
-    </footer>
+    <aside class="log" id="log">
+      <header class="sleeve">
+        <h1 class="wordmark">Tombaugh</h1>
+        <p class="tagline">What's moving above you?</p>
+      </header>
+
+      <section aria-labelledby="h-targets">
+        <h2 id="h-targets">Plates</h2>
+        <div class="row" id="targets"></div>
+      </section>
+
+      <section aria-labelledby="h-frame">
+        <h2 id="h-frame">Frame</h2>
+        <dl class="facts" id="facts"></dl>
+        <p class="warn" id="release-note" hidden>
+          Frames come from different data releases. Compare brightness with care.
+        </p>
+      </section>
+
+      <section aria-labelledby="h-controls">
+        <h2 id="h-controls">Comparator</h2>
+        <div class="row">
+          <button id="b-prev" aria-label="Previous frame (left arrow)">Back</button>
+          <button id="b-play" aria-pressed="false">Play</button>
+          <button id="b-next" aria-label="Next frame (right arrow)">Next</button>
+          <button id="b-speed" aria-label="Change speed">2 / s</button>
+        </div>
+        <div class="row">
+          <button id="b-blink" aria-pressed="false">Blink A/B</button>
+          <button id="b-seta">Set A</button>
+          <button id="b-setb">Set B</button>
+        </div>
+        <div class="row">
+          <button id="b-frames" aria-pressed="true">Frames</button>
+          <button id="b-diff" aria-pressed="false">Difference</button>
+          <button id="b-stack" aria-pressed="false">Stack</button>
+        </div>
+        <div class="row" id="detectors" aria-label="Detector"></div>
+        <div class="legend" id="legend" hidden>
+          <span><i class="swatch was"></i>was here</span>
+          <span><i class="swatch now"></i>is here now</span>
+          <span class="dim">frame minus frame A</span>
+        </div>
+        <p class="keys">
+          Keys: space play, arrows step, B blink, D difference, S stack, P plate or sky, G
+          Gaia.
+        </p>
+      </section>
+
+      <section aria-labelledby="h-view">
+        <h2 id="h-view">View</h2>
+        <div class="row">
+          <button id="b-plate" aria-pressed="true">Plate</button>
+          <button id="b-sky" aria-pressed="false">Sky</button>
+          <button id="b-gaia" aria-pressed="true">Gaia stars</button>
+        </div>
+        <p class="caption">
+          Astronomers often view the sky as a negative, as they did when Pluto was found.
+          Faint objects are easier to spot.
+        </p>
+      </section>
+
+      <section aria-labelledby="h-motion" id="motion-section">
+        <h2 id="h-motion">Motion</h2>
+        <dl class="facts" id="motion"></dl>
+      </section>
+
+      <section aria-labelledby="h-spec">
+        <h2 id="h-spec">Spectrum and light curve</h2>
+        <p class="caption" id="spec-hint">Click a point on the plate.</p>
+        <canvas id="plot-spec" class="plot" role="img" aria-label="Spectrum, empty"></canvas>
+        <canvas id="plot-time" class="plot" role="img" aria-label="Light curve, empty"></canvas>
+        <p class="caption" id="spec-note" hidden>
+          Brightness in a 9 arcsec aperture on each visit stack, sky ring removed. Circles
+          and squares are the two detectors. Triangles are lower limits.
+        </p>
+      </section>
+
+      <section aria-labelledby="h-about">
+        <h2 id="h-about">About</h2>
+        <p class="caption">
+          Clyde Tombaugh found Pluto in 1930 by flicking between two photographs of the same
+          stars and spotting the one that moved. Tombaugh does the same with images from
+          NASA's SPHEREx space telescope, for the patch of sky above you.
+        </p>
+        <p class="caption">Live lookups: <span id="api-status" role="status">checking</span></p>
+      </section>
+    </aside>
 
     <script type="module" src="js/main.js"></script>
   </body>

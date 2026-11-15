@@ -67,6 +67,7 @@ def read_before_psf(res: requests.Response) -> bytes:
             if name in config.PSF_EXTENSIONS:
                 res.close()
                 return bytes(buf[:start])
+    # No PSF seen: the stream ended early or the layout changed. The caller checks.
     return bytes(buf)
 
 
@@ -148,8 +149,19 @@ def search(
 
 
 def cutout_path(product: dict, ra: float, dec: float, size_deg: float) -> Path:
-    name = f"{product['obs_id']}_{product['detector']}_{ra:.4f}_{dec:+.4f}_{size_deg:.3f}.fits"
+    """Cache path. The name says the PSF was left out, so it is never taken for a full file."""
+    name = f"{product['obs_id']}_{product['detector']}_{ra:.4f}_{dec:+.4f}_{size_deg:.3f}_nopsf.fits"
     return config.CACHE_DIR / "cutouts" / product["collection"] / name
+
+
+def check_hdus(data: bytes, names: list[str]) -> None:
+    """Raise unless data is exactly these HDUs after the primary, each one whole."""
+    spans = hdu_spans(data)
+    found = [name for name, _, _ in spans[1:]]
+    if found != names:
+        raise RuntimeError(f"expected extensions {names}, got {found}")
+    if spans[-1][2] != len(data):
+        raise RuntimeError(f"file is {len(data)} bytes, extensions need {spans[-1][2]}")
 
 
 def wave_table_hdu(product: dict, url: str) -> bytes:
@@ -157,6 +169,7 @@ def wave_table_hdu(product: dict, url: str) -> bytes:
 
     The table is in detector coordinates and comes from one calibration file
     per detector, so it is the same in every cutout of a collection.
+    scripts/check_wave_table.py tests this on full downloads.
     """
     path = (
         config.CACHE_DIR / "wave" / f"{product['collection']}_{product['detector']}.hdu"
@@ -165,21 +178,39 @@ def wave_table_hdu(product: dict, url: str) -> bytes:
         if not path.is_file():
             full = http_get(url)
             spans = {name: (a, b) for name, a, b in hdu_spans(full)}
+            if "WCS-WAVE" not in spans or spans["WCS-WAVE"][1] > len(full):
+                raise RuntimeError(f"no complete WCS-WAVE extension in {url}")
             start, stop = spans["WCS-WAVE"]
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(full[start:stop])
+            tmp = path.with_suffix(".part")
+            tmp.write_bytes(full[start:stop])
+            tmp.replace(path)
         return path.read_bytes()
 
 
 def fetch_cutout(product: dict, ra: float, dec: float, size_deg: float) -> Path:
-    """Download one cutout unless it is already cached. The PSF is not downloaded."""
+    """Download one cutout unless it is already cached. The PSF is not downloaded.
+
+    Nothing is cached unless every plane we use arrived whole.
+    """
     path = cutout_path(product, ra, dec, size_deg)
     if path.is_file():
         return path
     url = f"{product['access_url']}?center={ra:.6f},{dec:.6f}&size={size_deg:.4f}"
-    data = http_get(url, skip_psf=True)
-    if "WCS-WAVE" not in [name for name, _, _ in hdu_spans(data)]:
-        data += wave_table_hdu(product, url)
+    last = ""
+    for _ in range(2):
+        try:
+            data = http_get(url, skip_psf=True)
+            # A stream that stopped early fails here and is thrown away
+            check_hdus(data, config.CUTOUT_PLANES)
+            data += wave_table_hdu(product, url)
+            check_hdus(data, config.CUTOUT_PLANES + ["WCS-WAVE"])
+            break
+        except RuntimeError as err:
+            last = str(err)
+            log.warning("Bad cutout, trying again (%s): %s", last, url)
+    else:
+        raise RuntimeError(f"cutout incomplete ({last}): {url}")
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".part")
     tmp.write_bytes(data)

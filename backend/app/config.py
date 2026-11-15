@@ -76,6 +76,8 @@ MAX_FOV_DEG = 0.5
 
 # Extension names of the PSF in different releases. Downloads stop when one starts.
 PSF_EXTENSIONS = ["PSF", "EPSF"]
+# Planes that must arrive whole, in file order, before a cutout is cached
+CUTOUT_PLANES = ["IMAGE", "FLAGS", "VARIANCE", "ZODI"]
 
 # --- Gaia alignment ---
 

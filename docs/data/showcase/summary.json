@@ -36,7 +36,12 @@
       "parallax_arcsec": 0.16518993791720218,
       "parallax_err_arcsec": 0.21123448922049376
     },
-    "published_rate_arcsec_yr": 8.15
+    "published_rate_arcsec_yr": 8.15,
+    "centre": [
+      133.7951,
+      -7.2451,
+      0.2
+    ]
   },
   "barnard": {
     "name": "Barnard's Star",
@@ -75,7 +80,12 @@
       "parallax_arcsec": 1.4948827184526392,
       "parallax_err_arcsec": 0.33553842458393385
     },
-    "published_rate_arcsec_yr": 10.39
+    "published_rate_arcsec_yr": 10.39,
+    "centre": [
+      269.4463,
+      4.7679,
+      0.2
+    ]
   },
   "eps_indi_b": {
     "name": "Epsilon Indi B",
@@ -114,7 +124,12 @@
       "parallax_arcsec": 0.29142379589608475,
       "parallax_err_arcsec": 0.049179952388252915
     },
-    "published_rate_arcsec_yr": 4.7
+    "published_rate_arcsec_yr": 4.7,
+    "centre": [
+      331.0958,
+      -56.8009,
+      0.2
+    ]
   },
   "rw_aur": {
     "name": "RW Aurigae",
@@ -135,7 +150,12 @@
     "motion_points": 0,
     "motion_fit": null,
     "motion_fit_with_parallax": null,
-    "published_rate_arcsec_yr": null
+    "published_rate_arcsec_yr": null,
+    "centre": [
+      76.9565,
+      30.4013,
+      0.2
+    ]
   },
   "r_dra": {
     "name": "R Draconis",
@@ -156,6 +176,11 @@
     "motion_points": 0,
     "motion_fit": null,
     "motion_fit_with_parallax": null,
-    "published_rate_arcsec_yr": null
+    "published_rate_arcsec_yr": null,
+    "centre": [
+      248.1975,
+      66.7519,
+      0.2
+    ]
   }
 }
