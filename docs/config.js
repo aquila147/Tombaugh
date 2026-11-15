@@ -1,7 +1,7 @@
 // Back-end address. Put the deployed URL here (Azure Container Apps, or the
 // Hugging Face fallback). Leave it empty and the site still works from the
 // stored plates, with live lookups switched off.
-const PRODUCTION_API_URL = "";
+const PRODUCTION_API_URL = "https://tombaugh-api.niceisland-b9881831.southeastasia.azurecontainerapps.io";
 
 // On a developer's machine the local back end is used instead.
 const local = ["localhost", "127.0.0.1"].includes(location.hostname);

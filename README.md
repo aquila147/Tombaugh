@@ -115,6 +115,19 @@ Of the eight false-alarm tracks from the injection test, seven are flagged and o
 
 Votes are anonymous, one per device per candidate. The public map shows only 3 degree patches of sky that visitors have looked up. Tombaugh never sends anything to an agency or survey; candidate cards point experts to [Backyard Worlds: Planet 9](https://www.zooniverse.org/projects/marckuchner/backyard-worlds-planet-9) for slow movers and the [Minor Planet Center](https://www.minorplanetcenter.net/) for asteroids and comets.
 
+### Optional extra: a brown dwarf score
+
+This is a score, not an identification. It counts three features, each judged against ordinary Gaia stars measured the same way in the same images: motion like a nearby star (5 sigma or more, and no faster than 15 arcsec/yr), a methane index (median brightness at 3.15 to 3.45 microns over 3.9 to 4.2 microns; lower means more methane), and a red colour (brightness at 2.45 to 2.95 microns over 3.9 to 4.2 microns; lower means redder). A spectral feature counts when it sits 3 sigma or more below the field stars.
+
+| Object | Role | Methane index | Field stars | Short over long | Field stars | Score |
+|---|---|---|---|---|---|---|
+| WISE 0855-0714 | brown dwarf | 0.51 ± 0.21 (4.4 sigma below) | 1.43 | 0.84 ± 0.25 (4.6 sigma below) | 2.03 | 3 of 3 |
+| Epsilon Indi B | brown dwarf | 0.18 ± 0.01 (113 sigma below) | 1.47 | 0.16 ± 0.01 (17.6 sigma below) | 2.11 | 3 of 3 |
+| Barnard's Star | control, red dwarf | not measured (saturated) | 1.42 | not measured | 1.97 | 1 of 3 |
+| 120 Lachesis | control, asteroid | not measured | 1.40 | not measured | none | 0 of 3 |
+
+None of the ordinary field stars passes either spectral feature: 0 of 55 for methane and 0 of 47 for colour, over the four fields. The score is a script and a module only (`scripts/score_brown_dwarfs.py`, `app/browndwarf.py`); it is not shown in the viewer or served by the back end.
+
 ## How it works
 
 1. **Find the exposures.** IRSA's image search lists every SPHEREx Level 2 exposure covering a position.
@@ -139,6 +152,7 @@ The front end is plain HTML, CSS and JavaScript with a canvas player and no buil
 - **Only two detectors per showcase target** are built, and deep fields are capped at 80 exposures per detector.
 - **Live plates do not label known asteroids on the image**; the candidate checklist does the naming.
 - **Reduced-motion behaviour** (no autoplay, slower blink) is implemented but was not tested with the browser setting switched on.
+- **The brown dwarf score is validated on two brown dwarfs only,** and its controls are weak. Barnard's Star is saturated, so its methane index and colour could not be measured and its score of 1 comes from motion alone. 120 Lachesis scores 0 because of its speed; it had four exposures in the 3.9 to 4.2 micron band and none in the other two. WISE 0855 is faint in all three bands (2.9, 4.6 and 5.1 times its measurement error, which includes the blank-sky scatter), so its 4.4 and 4.6 sigma separations are modest, and a faint neighbour inside the 21 arcsec box could contribute. The 3 sigma thresholds were not tuned and have not been tested on any other brown dwarf. The field-star count uses scatter measured from those same stars.
 - **Nothing here is a confirmed new object.**
 
 ## Run it and reproduce the numbers
@@ -162,9 +176,10 @@ Serve the front end from another terminal with `python -m http.server 5500 --dir
 | `find_demo_asteroid`, `build_demo` | JPL strip search and the Singapore demo plate |
 | `build_engine_view` | Before and after images for the viewer |
 | `seed_candidates` | Checks on the real engine outputs, written to Supabase |
+| `score_brown_dwarfs` | Brown dwarf score on two brown dwarfs, two controls and field stars |
 | `check_wave_table` | Wavelength table compared across 30 full cutouts |
 | `check_rls` | Twelve row level security tests with the publishable key |
-| `python -m unittest discover -s tests -t .` | 17 unit tests |
+| `python -m unittest discover -s tests -t .` | 24 unit tests |
 
 Synthetic data appears only in the injection test and the unit tests, is labelled there, and is never written to the plates or the candidates table.
 

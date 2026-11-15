@@ -162,6 +162,44 @@ def main() -> None:
             print(f"  {r['status']:13s} {r['checks']['summary']['label']}")
 
     section(
+        "Brown dwarf score: a score, not an identification",
+        "score_brown_dwarfs.py",
+    )
+    scores = load(VALIDATION / "browndwarf.json")
+
+    def shown(value: dict | None) -> str:
+        if value is None:
+            return "not measured"
+        return f"{value['value']:.2f} +/- {value['err']:.2f}"
+
+    for r in scores.values():
+        stars = r["field_stars"]["methane_index"]
+        print(
+            f"{r['name']:24s} ({r['role']}): score {r['result']['score']} of 3, "
+            f"{r['result']['features_measured']} of 3 features measured"
+        )
+        print(
+            f"    methane index {shown(r['methane_index'])} "
+            f"(field stars {stars['median']:.2f}, scatter {stars['sigma']:.2f}, {stars['n']} stars), "
+            f"sigma below stars {r['methane_sigma_below_stars']}"
+        )
+        print(
+            f"    short over long {shown(r['short_over_long'])}, "
+            f"sigma below stars {r['colour_sigma_below_stars']}; "
+            f"motion {r['rate_arcsec_yr']} +/- {r['rate_err_arcsec_yr']} arcsec/yr"
+        )
+    for name in ["methane", "colour"]:
+        key = "methane_index" if name == "methane" else "short_over_long"
+        counted = [
+            r for r in scores.values() if r["field_stars_passing"][name] is not None
+        ]
+        print(
+            f"ordinary field stars passing the {name} feature: "
+            f"{sum(r['field_stars_passing'][name] for r in counted)} of "
+            f"{sum(r['field_stars'][key]['n'] for r in counted)}"
+        )
+
+    section(
         "Rows now in Supabase, read with the publishable key",
         "seed_candidates.py and live jobs",
     )

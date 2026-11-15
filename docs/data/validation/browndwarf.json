@@ -1,0 +1,278 @@
+{
+  "wise0855": {
+    "name": "WISE 0855-0714",
+    "role": "brown dwarf",
+    "exposures": 84,
+    "exposures_measured": 72,
+    "rate_arcsec_yr": 7.51,
+    "rate_err_arcsec_yr": 0.57,
+    "bands": {
+      "methane": {
+        "flux": 0.848,
+        "err": 0.296,
+        "n": 8
+      },
+      "continuum": {
+        "flux": 1.679,
+        "err": 0.366,
+        "n": 18
+      },
+      "short": {
+        "flux": 1.418,
+        "err": 0.276,
+        "n": 14
+      }
+    },
+    "methane_index": {
+      "value": 0.505,
+      "err": 0.208
+    },
+    "short_over_long": {
+      "value": 0.845,
+      "err": 0.247
+    },
+    "blank_sky": {
+      "methane": {
+        "median": 0.018,
+        "sigma": 0.289,
+        "n": 60
+      },
+      "continuum": {
+        "median": -0.096,
+        "sigma": 0.232,
+        "n": 60
+      },
+      "short": {
+        "median": -0.005,
+        "sigma": 0.269,
+        "n": 60
+      }
+    },
+    "field_stars": {
+      "methane_index": {
+        "median": 1.431,
+        "sigma": 0.036,
+        "n": 10
+      },
+      "short_over_long": {
+        "median": 2.025,
+        "sigma": 0.066,
+        "n": 10
+      }
+    },
+    "field_stars_passing": {
+      "methane": 0,
+      "colour": 0
+    },
+    "methane_sigma_below_stars": 4.4,
+    "colour_sigma_below_stars": 4.6,
+    "result": {
+      "label": "Brown dwarf score (a score, not an identification)",
+      "score": 3,
+      "out_of": 3,
+      "features": {
+        "moves_like_a_nearby_star": true,
+        "methane_absorption": true,
+        "red_colour": true
+      },
+      "features_measured": 3,
+      "note": ""
+    }
+  },
+  "eps_indi_b": {
+    "name": "Epsilon Indi B",
+    "role": "brown dwarf",
+    "exposures": 99,
+    "exposures_measured": 76,
+    "rate_arcsec_yr": 4.57,
+    "rate_err_arcsec_yr": 0.08,
+    "bands": {
+      "methane": {
+        "flux": 46.521,
+        "err": 2.526,
+        "n": 4
+      },
+      "continuum": {
+        "flux": 259.562,
+        "err": 3.536,
+        "n": 19
+      },
+      "short": {
+        "flux": 41.027,
+        "err": 1.313,
+        "n": 12
+      }
+    },
+    "methane_index": {
+      "value": 0.179,
+      "err": 0.01
+    },
+    "short_over_long": {
+      "value": 0.158,
+      "err": 0.005
+    },
+    "blank_sky": {
+      "methane": {
+        "median": -0.007,
+        "sigma": 0.302,
+        "n": 60
+      },
+      "continuum": {
+        "median": -0.015,
+        "sigma": 0.246,
+        "n": 60
+      },
+      "short": {
+        "median": 0.022,
+        "sigma": 0.364,
+        "n": 60
+      }
+    },
+    "field_stars": {
+      "methane_index": {
+        "median": 1.474,
+        "sigma": 0.005,
+        "n": 6
+      },
+      "short_over_long": {
+        "median": 2.114,
+        "sigma": 0.111,
+        "n": 6
+      }
+    },
+    "field_stars_passing": {
+      "methane": 0,
+      "colour": 0
+    },
+    "methane_sigma_below_stars": 113.4,
+    "colour_sigma_below_stars": 17.6,
+    "result": {
+      "label": "Brown dwarf score (a score, not an identification)",
+      "score": 3,
+      "out_of": 3,
+      "features": {
+        "moves_like_a_nearby_star": true,
+        "methane_absorption": true,
+        "red_colour": true
+      },
+      "features_measured": 3,
+      "note": ""
+    }
+  },
+  "barnard": {
+    "name": "Barnard's Star",
+    "role": "control: red dwarf star",
+    "exposures": 78,
+    "exposures_measured": 0,
+    "rate_arcsec_yr": 11.04,
+    "rate_err_arcsec_yr": 0.82,
+    "bands": {},
+    "methane_index": null,
+    "short_over_long": null,
+    "blank_sky": {
+      "methane": {
+        "median": -0.24,
+        "sigma": 0.555,
+        "n": 59
+      },
+      "continuum": {
+        "median": -0.31,
+        "sigma": 0.361,
+        "n": 60
+      },
+      "short": {
+        "median": -0.101,
+        "sigma": 0.917,
+        "n": 59
+      }
+    },
+    "field_stars": {
+      "methane_index": {
+        "median": 1.423,
+        "sigma": 0.044,
+        "n": 32
+      },
+      "short_over_long": {
+        "median": 1.972,
+        "sigma": 0.086,
+        "n": 31
+      }
+    },
+    "field_stars_passing": {
+      "methane": 0,
+      "colour": 0
+    },
+    "methane_sigma_below_stars": null,
+    "colour_sigma_below_stars": null,
+    "result": {
+      "label": "Brown dwarf score (a score, not an identification)",
+      "score": 1,
+      "out_of": 3,
+      "features": {
+        "moves_like_a_nearby_star": true,
+        "methane_absorption": false,
+        "red_colour": false
+      },
+      "features_measured": 1,
+      "note": ""
+    }
+  },
+  "singapore": {
+    "name": "120 Lachesis (A872 GB)",
+    "role": "control: asteroid",
+    "exposures": 11,
+    "exposures_measured": 8,
+    "rate_arcsec_yr": 239662.44,
+    "rate_err_arcsec_yr": 438.3,
+    "bands": {
+      "methane": null,
+      "continuum": {
+        "flux": 36.766,
+        "err": 0.556,
+        "n": 4
+      },
+      "short": null
+    },
+    "methane_index": null,
+    "short_over_long": null,
+    "blank_sky": {
+      "methane": {
+        "median": 0.036,
+        "sigma": 0.328,
+        "n": 54
+      },
+      "continuum": {
+        "median": -0.009,
+        "sigma": 0.488,
+        "n": 60
+      },
+      "short": null
+    },
+    "field_stars": {
+      "methane_index": {
+        "median": 1.396,
+        "sigma": 0.103,
+        "n": 7
+      },
+      "short_over_long": null
+    },
+    "field_stars_passing": {
+      "methane": 0,
+      "colour": null
+    },
+    "methane_sigma_below_stars": null,
+    "colour_sigma_below_stars": null,
+    "result": {
+      "label": "Brown dwarf score (a score, not an identification)",
+      "score": 0,
+      "out_of": 3,
+      "features": {
+        "moves_like_a_nearby_star": false,
+        "methane_absorption": false,
+        "red_colour": false
+      },
+      "features_measured": 1,
+      "note": "Moves far too fast for a star or brown dwarf: a solar-system object."
+    }
+  }
+}
