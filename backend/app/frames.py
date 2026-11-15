@@ -247,15 +247,29 @@ def build_frames(
     detectors: list[str],
     max_per_detector: int | None = None,
     collection: str | None = None,
+    select=None,
+    progress=None,
+    products: list[dict] | None = None,
 ) -> dict:
     """Search, download, clean, align and reproject every frame of a field.
 
-    Pass a collection to keep to one data release.
+    Pass a collection to keep to one data release. select, if given, takes the
+    products of one detector and returns the ones to use. progress, if given,
+    is called with a short text as each step starts. products, if given, is an
+    exposure list to use in place of a new archive search.
     """
-    products = archive.search(ra, dec)
-    if collection:
+    if products is None:
+        products = archive.search(
+            ra, dec, collections=[collection] if collection else None
+        )
+    elif collection:
         products = [p for p in products if p["collection"] == collection]
-    stars = catalogs.gaia_stars(ra, dec, fov_deg * 0.75)
+    try:
+        stars = catalogs.gaia_stars(ra, dec, fov_deg * 0.75)
+    except RuntimeError as err:
+        # Fallback from the brief: keep the header WCS and say so
+        log.warning("No Gaia stars, frames keep their header WCS: %s", err)
+        stars = []
     usable = isolated_stars(stars) if stars else np.zeros(0, dtype=bool)
     grid, size = make_grid(ra, dec, fov_deg)
     yy, xx = np.mgrid[0:size, 0:size]
@@ -264,9 +278,17 @@ def build_frames(
     frames = []
     for detector in detectors:
         chosen = [p for p in products if p["detector"] == detector]
+        if select:
+            chosen = select(chosen)
         if max_per_detector:
             chosen = pick_evenly(chosen, max_per_detector)
+        if progress:
+            progress(
+                f"Downloading {len(chosen)} {detector} cutouts from the SPHEREx archive."
+            )
         paths = archive.fetch_cutouts(chosen, ra, dec, fov_deg)
+        if progress:
+            progress(f"Aligning {detector} frames to Gaia stars.")
         for product, path in zip(chosen, paths):
             if path is None:
                 continue
@@ -413,7 +435,7 @@ def measure_motion(stacks: list[dict], grid: WCS, target: dict) -> dict:
     if len(points) < 3:
         return result
     t = np.array([(p["mjd"] - points[0]["mjd"]) / 365.25 for p in points])
-    if np.ptp(t) < 0.2:
+    if np.ptp(t) < target.get("min_baseline_yr", 0.2):
         return result
     xy = np.array([[p["x_arcsec"], p["y_arcsec"]] for p in points])
     snr = np.array([p["snr"] for p in points])

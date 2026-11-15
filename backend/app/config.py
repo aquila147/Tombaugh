@@ -81,7 +81,12 @@ CUTOUT_PLANES = ["IMAGE", "FLAGS", "VARIANCE", "ZODI"]
 
 # --- Gaia alignment ---
 
-GAIA_TAP_URL = "https://gea.esac.esa.int/tap-server/tap/sync"
+# ESA archive first, then the Gaia partner archive at AIP Potsdam (same table)
+GAIA_TAP_URLS = [
+    "https://gea.esac.esa.int/tap-server/tap/sync",
+    "https://gaia.aip.de/tap/sync",
+]
+CATALOG_TIMEOUT_S = 12
 GAIA_EPOCH_MJD = 57388.5  # J2016.0
 GAIA_MAG_LIMIT = 17.0
 ALIGN_MIN_SNR = 10.0
@@ -150,3 +155,17 @@ SLOW_MIN_STARS = 8
 
 SB_IDENT_URL = "https://ssd-api.jpl.nasa.gov/sb_ident.api"
 SB_VMAG_LIMIT = 21
+
+# --- Overhead lookup ---
+
+# Field centres are snapped to this grid, so only a coarse sky patch is ever used
+FIELD_STEP_DEG = 0.2
+
+# --- Live lookups ---
+
+LIVE_MAX_FOV_DEG = 0.3
+LIVE_MAX_FRAMES = 60
+LIVE_MIN_FRAMES = 8
+LIVE_MAX_CANDIDATES = 10
+# If the archive search is down, reuse a saved exposure list this close by
+LIVE_REUSE_SEARCH_DEG = 0.6

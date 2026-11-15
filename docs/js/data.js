@@ -4,9 +4,14 @@ const BASE = "data/showcase";
 const ASINH10 = Math.asinh(10);
 
 export async function loadIndex() {
-  const res = await fetch(`${BASE}/summary.json`);
+  const res = await fetch(`${BASE}/summary.json`, { cache: "no-cache" });
   const summary = await res.json();
-  return Object.entries(summary).map(([id, entry]) => ({ id, name: entry.name }));
+  return Object.entries(summary).map(([id, entry]) => ({
+    id,
+    name: entry.title || entry.name,
+    centre: entry.centre,
+    demo: Boolean(entry.demo),
+  }));
 }
 
 // --- Frames ---
@@ -14,6 +19,8 @@ export async function loadIndex() {
 function loadImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
+    // Live plates come from the back end, a different origin
+    img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error(`Could not load ${url}`));
     img.src = url;
@@ -35,15 +42,15 @@ export function stretchValue(flux, lo, hi) {
 }
 
 // Before and after significance maps from the engine, or null if this plate has none.
-export async function loadEngine(id, size) {
-  const res = await fetch(`${BASE}/${id}/engine/engine.json`);
+export async function loadEngine(id, size, base = BASE) {
+  const res = await fetch(`${base}/${id}/engine/engine.json`, { cache: "no-cache" });
   if (!res.ok) return null;
   const meta = await res.json();
   const scratch = document.createElement("canvas");
   scratch.width = scratch.height = size;
   const ctx = scratch.getContext("2d", { willReadFrequently: true });
   const files = meta.frames.flatMap((f) => [f.before, f.after]);
-  const loaded = await Promise.all(files.map((f) => loadImage(`${BASE}/${id}/engine/${f}`)));
+  const loaded = await Promise.all(files.map((f) => loadImage(`${base}/${id}/engine/${f}`)));
   const images = Object.fromEntries(files.map((f, i) => [f, loaded[i]]));
   const read = (file) => {
     ctx.drawImage(images[file], 0, 0);
@@ -61,8 +68,8 @@ export async function loadEngine(id, size) {
   return { ...meta, frames };
 }
 
-export async function loadTarget(id) {
-  const meta = await (await fetch(`${BASE}/${id}/meta.json`)).json();
+export async function loadTarget(id, base = BASE) {
+  const meta = await (await fetch(`${base}/${id}/meta.json`, { cache: "no-cache" })).json();
   const size = meta.size;
   const scratch = document.createElement("canvas");
   scratch.width = scratch.height = size;
@@ -70,7 +77,7 @@ export async function loadTarget(id) {
   const tables = {};
   for (const [det, [lo, hi]] of Object.entries(meta.stretch)) tables[det] = fluxTable(lo, hi);
 
-  const images = await Promise.all(meta.frames.map((f) => loadImage(`${BASE}/${id}/${f.file}`)));
+  const images = await Promise.all(meta.frames.map((f) => loadImage(`${base}/${id}/${f.file}`)));
   const frames = meta.frames.map((f, i) => {
     ctx.drawImage(images[i], 0, 0);
     const rgba = ctx.getImageData(0, 0, size, size).data;

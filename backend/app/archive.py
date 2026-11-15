@@ -125,17 +125,25 @@ def search_collection(
 
 
 def search(
-    ra: float, dec: float, radius_deg: float = config.SEARCH_RADIUS_DEG
+    ra: float,
+    dec: float,
+    radius_deg: float = config.SEARCH_RADIUS_DEG,
+    collections: list[str] | None = None,
 ) -> list[dict]:
-    """All Level 2 images covering a position, newest release first, cached on disk."""
-    name = f"{ra:.4f}_{dec:+.4f}_{radius_deg:.4f}_{'-'.join(config.SPHEREX_COLLECTIONS)}.json"
+    """All Level 2 images covering a position, cached on disk.
+
+    collections defaults to every release in the config. Pass one release to
+    avoid asking for the others at all.
+    """
+    collections = collections or config.SPHEREX_COLLECTIONS
+    name = f"{ra:.4f}_{dec:+.4f}_{radius_deg:.4f}_{'-'.join(collections)}.json"
     path = config.CACHE_DIR / "search" / name
     if path.is_file():
         return json.loads(path.read_text())
 
-    # Earlier collections in the config list win when an exposure is in both
+    # Earlier collections in the list win when an exposure is in both
     seen: dict[tuple[str, str], dict] = {}
-    for collection in config.SPHEREX_COLLECTIONS:
+    for collection in collections:
         for p in search_collection(collection, ra, dec, radius_deg):
             seen.setdefault((p["obs_id"], p["detector"]), p)
     products = sorted(seen.values(), key=lambda p: (p["mjd"], p["detector"]))
@@ -143,6 +151,30 @@ def search(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(products))
     return products
+
+
+def cached_search_near(
+    ra: float, dec: float, max_deg: float
+) -> tuple[list[dict], float] | None:
+    """Closest exposure list already on disk, with its distance in degrees.
+
+    Used only when the archive search is down. Exposures are 3.5 degrees
+    wide, so a list from a point close by mostly covers the same sky, and the
+    cutout service rejects any exposure that does not.
+    """
+    best = None
+    for path in (config.CACHE_DIR / "search").glob("*.json"):
+        parts = path.stem.split("_")
+        try:
+            ra_c, dec_c = float(parts[0]), float(parts[1])
+        except (ValueError, IndexError):
+            continue
+        sep = float(np.hypot((ra_c - ra) * np.cos(np.radians(dec)), dec_c - dec))
+        if sep <= max_deg and (best is None or sep < best[1]):
+            best = (path, sep)
+    if best is None:
+        return None
+    return json.loads(best[0].read_text()), best[1]
 
 
 # --- Cutouts ---

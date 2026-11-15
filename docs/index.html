@@ -29,6 +29,29 @@
         <p class="tagline">What's moving above you?</p>
       </header>
 
+      <section aria-label="Your sky">
+        <div class="row">
+          <button id="b-above" class="primary">What's moving above you?</button>
+        </div>
+        <div class="row">
+          <input
+            id="place"
+            type="text"
+            value="Singapore"
+            autocomplete="off"
+            aria-label="City, or latitude and longitude"
+          />
+          <button id="b-place">Look up</button>
+        </div>
+        <p class="caption">
+          Finds the patch of sky straight above you right now and shows it as SPHEREx
+          recorded it on earlier dates. It is not a live view. Your location stays on this
+          device; only the sky patch, rounded to 0.2 degrees, is used.
+        </p>
+        <p class="result" id="above-result" role="status" hidden></p>
+        <div class="row" id="above-actions"></div>
+      </section>
+
       <section aria-labelledby="h-targets">
         <h2 id="h-targets">Plates</h2>
         <div class="row" id="targets"></div>

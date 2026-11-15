@@ -138,7 +138,7 @@ function drawMarkings(ctx, side, view) {
   // Target: catalogue path, ring at the frame date, measured positions
   ctx.strokeStyle = MARK;
   ctx.fillStyle = MARK;
-  if (meta.catalogue.published_rate !== null) {
+  if (meta.catalogue && meta.catalogue.published_rate !== null) {
     const first = view.frames[0].mjd;
     const last = view.frames[view.frames.length - 1].mjd;
     const [x0, y0] = at(...positionAt(meta.catalogue, first));
@@ -161,14 +161,29 @@ function drawMarkings(ctx, side, view) {
       ctx.stroke();
     }
   }
-  const [tx, ty] = at(...positionAt(meta.catalogue, frame.mjd));
   const ring = 16 * dpr;
   ctx.lineWidth = 1.5 * dpr;
-  ctx.beginPath();
-  ctx.arc(tx, ty, ring, 0, 2 * Math.PI);
-  ctx.stroke();
   ctx.textAlign = "left";
-  ctx.fillText(meta.name, tx + ring + 4 * dpr, ty - ring + 4 * dpr);
+  if (meta.catalogue) {
+    const [tx, ty] = at(...positionAt(meta.catalogue, frame.mjd));
+    ctx.beginPath();
+    ctx.arc(tx, ty, ring, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fillText(meta.name, tx + ring + 4 * dpr, ty - ring + 4 * dpr);
+  }
+
+  // Unchecked candidates from a live run: a red triangle with a number
+  (meta.candidates || []).forEach((candidate, i) => {
+    const [x, y] = at(candidate.ra, candidate.dec);
+    const r = 11 * dpr;
+    ctx.beginPath();
+    ctx.moveTo(x, y - r);
+    ctx.lineTo(x + r, y + r * 0.8);
+    ctx.lineTo(x - r, y + r * 0.8);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fillText(`c${i + 1}`, x + r + 3 * dpr, y - r + 4 * dpr);
+  });
 
   // Picked point: a red corner bracket with a label
   if (view.pick) {

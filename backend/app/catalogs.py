@@ -5,9 +5,12 @@ import io
 import json
 import logging
 import re
+import warnings
 from urllib.parse import urlencode
 
 import numpy as np
+import requests
+from astropy.io.votable import parse_single_table
 from astropy.time import Time
 
 from app import archive, config
@@ -18,32 +21,85 @@ log = logging.getLogger("tombaugh.catalogs")
 # --- Gaia DR3 ---
 
 
+def tap_rows(url: str, query: str) -> list[dict]:
+    """Run one ADQL query and return the rows. Short timeout, two tries."""
+    params = {"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": query}
+    last = ""
+    for _ in range(2):
+        try:
+            res = requests.get(url, params=params, timeout=config.CATALOG_TIMEOUT_S)
+            if res.status_code != 200:
+                last = f"HTTP {res.status_code}"
+                continue
+            if res.text.lstrip().startswith("<"):
+                # Some archives answer with a VOTable whatever format is asked for
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    table = parse_single_table(io.BytesIO(res.content)).to_table(
+                        use_names_over_ids=True
+                    )
+                return [{name: row[name] for name in table.colnames} for row in table]
+            return list(csv.DictReader(io.StringIO(res.text)))
+        except requests.RequestException as err:
+            last = type(err).__name__
+    raise RuntimeError(f"catalogue query failed ({last}): {url}")
+
+
+def number(value) -> float:
+    """Float from a CSV field or a table cell; empty or masked gives 0."""
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return 0.0
+    return out if np.isfinite(out) else 0.0
+
+
 def gaia_stars(ra: float, dec: float, radius_deg: float) -> list[dict]:
-    """Gaia DR3 stars in a cone at epoch 2016.0, brightest first, cached on disk."""
+    """Gaia DR3 stars in a cone at epoch 2016.0, brightest first, cached on disk.
+
+    Asks the ESA Gaia archive first, then the Gaia partner archive at AIP,
+    which holds the same table. Raises RuntimeError if neither answers.
+    """
     path = config.CACHE_DIR / "gaia" / f"{ra:.4f}_{dec:+.4f}_{radius_deg:.4f}.json"
     if path.is_file():
         return json.loads(path.read_text())
 
+    half_ra = radius_deg / max(np.cos(np.radians(dec)), 0.05)
     query = (
-        "SELECT source_id, ra, dec, pmra, pmdec, phot_g_mean_mag "
-        "FROM gaiadr3.gaia_source WHERE 1=CONTAINS(POINT('ICRS', ra, dec), "
-        f"CIRCLE('ICRS', {ra:.6f}, {dec:.6f}, {radius_deg:.5f})) "
+        "SELECT source_id, ra, dec, pmra, pmdec, phot_g_mean_mag AS g "
+        "FROM gaiadr3.gaia_source "
+        f"WHERE ra BETWEEN {ra - half_ra:.6f} AND {ra + half_ra:.6f} "
+        f"AND dec BETWEEN {dec - radius_deg:.6f} AND {dec + radius_deg:.6f} "
         f"AND phot_g_mean_mag < {config.GAIA_MAG_LIMIT} ORDER BY phot_g_mean_mag"
     )
-    params = {"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": query}
-    text = archive.http_get(f"{config.GAIA_TAP_URL}?{urlencode(params)}").decode()
-    stars = []
-    for row in csv.DictReader(io.StringIO(text)):
-        stars.append(
-            {
-                "id": row["source_id"],
-                "ra": float(row["ra"]),
-                "dec": float(row["dec"]),
-                "pmra": float(row["pmra"] or 0.0),
-                "pmdec": float(row["pmdec"] or 0.0),
-                "g": float(row["phot_g_mean_mag"]),
-            }
-        )
+    rows, last = None, None
+    for url in config.GAIA_TAP_URLS:
+        try:
+            rows = tap_rows(url, query)
+            break
+        except RuntimeError as err:
+            log.warning("%s", err)
+            last = err
+    if rows is None:
+        raise RuntimeError(f"no Gaia archive answered: {last}")
+    stars = [
+        {
+            "id": str(row["source_id"]),
+            "ra": float(row["ra"]),
+            "dec": float(row["dec"]),
+            "pmra": number(row["pmra"]),
+            "pmdec": number(row["pmdec"]),
+            "g": float(row["g"]),
+        }
+        for row in rows
+    ]
+    # The query is a box; keep the cone
+    stars = [
+        s
+        for s in stars
+        if np.hypot((s["ra"] - ra) * np.cos(np.radians(dec)), s["dec"] - dec)
+        <= radius_deg
+    ]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(stars))
     return stars
@@ -81,14 +137,20 @@ def parse_sexagesimal(text: str, is_dec: bool) -> float:
 
 
 def known_small_bodies(
-    ra: float, dec: float, mjd: float, half_width_deg: float
+    ra: float,
+    dec: float,
+    mjd: float,
+    half_width_deg: float,
+    half_height_deg: float | None = None,
+    vmag_limit: int = config.SB_VMAG_LIMIT,
 ) -> list[dict]:
     """Known asteroids and comets in a field at a time, from JPL sb_ident.
 
     Geocentric observer. Positions are the returned RA and Dec, not the
     rounded distance columns. A magnitude limit keeps the query from timing out.
     """
-    name = f"{ra:.4f}_{dec:+.4f}_{mjd:.4f}_{half_width_deg:.3f}_{config.SB_VMAG_LIMIT}.json"
+    half_height_deg = half_height_deg or half_width_deg
+    name = f"{ra:.4f}_{dec:+.4f}_{mjd:.4f}_{half_width_deg:.3f}_{half_height_deg:.3f}_{vmag_limit}.json"
     path = config.CACHE_DIR / "sb_ident" / name
     if path.is_file():
         return json.loads(path.read_text())
@@ -102,8 +164,8 @@ def known_small_bodies(
             "fov-ra-center": sexagesimal(ra, False),
             "fov-dec-center": sexagesimal(dec, True),
             "fov-ra-hwidth": f"{half_width_deg:.3f}",
-            "fov-dec-hwidth": f"{half_width_deg:.3f}",
-            "vmag-lim": str(config.SB_VMAG_LIMIT),
+            "fov-dec-hwidth": f"{half_height_deg:.3f}",
+            "vmag-lim": str(vmag_limit),
             "two-pass": "true",
         }
         reply = json.loads(

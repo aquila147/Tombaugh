@@ -2,6 +2,7 @@ import { API_URL } from "../config.js";
 import { loadEngine, loadIndex, loadTarget } from "./data.js";
 import { render, stackValues } from "./player.js";
 import { drawPlot } from "./plots.js";
+import { fieldCentre, parsePlace, zenith } from "./overhead.js";
 import { formatCoord, imageToSky, project } from "./sky.js";
 
 const $ = (id) => document.getElementById(id);
@@ -10,6 +11,7 @@ const params = new URLSearchParams(location.search);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const SPEEDS = [1, 2, 4, 8];
 const BLINK_MS = 500;
+const LIVE_FOV_DEG = 0.2;
 const MODES = ["frames", "diff", "stack"];
 
 const state = {
@@ -32,6 +34,8 @@ const state = {
   stacks: {},
   timer: null,
   side: "after",
+  base: undefined,
+  apiOn: false,
   engine: null,
   visits: [],
 };
@@ -43,12 +47,13 @@ function note(text) {
   $("plate-note").hidden = !text;
 }
 
-async function openTarget(id) {
+async function openTarget(id, base) {
   stop();
   note("Loading plate.");
   try {
-    const { meta, frames } = await loadTarget(id);
-    Object.assign(state, { id, meta, all: frames, stacks: {}, pick: null, engine: null });
+    const { meta, frames } = await loadTarget(id, base);
+    Object.assign(state, {
+      base, id, meta, all: frames, stacks: {}, pick: null, engine: null });
   } catch (err) {
     note("This plate could not be loaded.");
     return;
@@ -56,7 +61,9 @@ async function openTarget(id) {
   const wanted = params.get("det");
   const detectors = Object.keys(state.meta.stretch);
   const wantEngine = state.mode === "engine";
-  setDetector(detectors.includes(wanted) ? wanted : detectors[0]);
+  // A fast mover is seen by different detectors on different visits, so show them all
+  const first = state.meta.kind === "asteroid" ? "all" : detectors[0];
+  setDetector(detectors.includes(wanted) || wanted === "all" ? wanted : first);
   drawTargets();
   drawDetectors();
   drawMotion();
@@ -79,7 +86,7 @@ function useFrames(frames) {
 function setDetector(detector) {
   state.detector = detector;
   if (state.mode === "engine") state.mode = "frames";
-  useFrames(state.all.filter((f) => f.detector === detector));
+  useFrames(detector === "all" ? state.all : state.all.filter((f) => f.detector === detector));
 }
 
 // --- Engine before and after ---
@@ -91,7 +98,7 @@ async function showEngine(side) {
   if (state.engine === null) {
     note("Loading engine maps.");
     try {
-      state.engine = (await loadEngine(state.id, state.meta.size)) || false;
+      state.engine = (await loadEngine(state.id, state.meta.size, state.base)) || false;
     } catch {
       state.engine = false;
     }
@@ -130,6 +137,15 @@ function fitCanvas() {
 function draw() {
   if (!state.meta || !state.frames.length) return;
   const frame = state.frames[state.index];
+  // Stacks and differences only make sense within one detector
+  if (state.detector === "all" && (state.mode === "stack" || state.mode === "diff")) {
+    const mode = state.mode;
+    setDetector(frame.detector);
+    state.mode = mode;
+    drawDetectors();
+    draw();
+    return;
+  }
   if (state.mode === "stack" && !state.stacks[state.detector]) {
     state.stacks[state.detector] = stackValues(state.frames, state.meta.stretch[state.detector]);
   }
@@ -207,7 +223,7 @@ function drawTargets() {
     button.setAttribute("aria-pressed", String(t.id === state.id));
     button.addEventListener("click", () => {
       params.delete("det");
-      openTarget(t.id);
+      openTarget(t.id, t.base);
       updateUrl();
     });
     $("targets").append(button);
@@ -216,9 +232,10 @@ function drawTargets() {
 
 function drawDetectors() {
   $("detectors").innerHTML = "";
-  for (const detector of Object.keys(state.meta.stretch)) {
+  const names = Object.keys(state.meta.stretch);
+  for (const detector of names.length > 1 ? ["all", ...names] : names) {
     const button = document.createElement("button");
-    button.textContent = detector;
+    button.textContent = detector === "all" ? "All" : detector;
     button.setAttribute("aria-pressed", String(detector === state.detector));
     button.addEventListener("click", () => {
       stop();
@@ -234,7 +251,27 @@ function drawDetectors() {
 function drawMotion() {
   const { motion, alignment, catalogue } = state.meta;
   const rows = [];
-  if (motion.fit) {
+  const hoursPerYear = 8766;
+  if (state.meta.kind === "asteroid") {
+    const c = state.meta.confirmation;
+    rows.push(["Object", `${state.meta.name}, a known asteroid (JPL)`]);
+    rows.push(["Seen in", `${c.visit_stacks_with_detection} of ${c.visit_stacks} visit stacks over ${c.span_hours} hours`]);
+    if (motion.fit) {
+      const f = motion.fit;
+      rows.push(["Measured", `${(f.rate_arcsec_yr / hoursPerYear).toFixed(1)} +/- ${(f.rate_err_arcsec_yr / hoursPerYear).toFixed(1)} arcsec/hr`]);
+    }
+    rows.push(["JPL rate", `${c.jpl_rate_arcsec_hr.toFixed(1)} arcsec/hr, V ${c.jpl_vmag}`]);
+    rows.push(["Where", state.meta.zenith_note]);
+  } else if (state.meta.kind === "live") {
+    const list = state.meta.candidates || [];
+    rows.push(["Candidates", list.length ? `${list.length}, unchecked` : "none found"]);
+    list.forEach((c, i) => {
+      const detail = c.kind === "slow" ? `slow, significance ${c.significance}` : `fast, ${c.frames} exposures`;
+      rows.push([`c${i + 1}`, `${c.rate} ${c.unit}, ${detail}`]);
+    });
+    if (list.length) rows.push(["Note", "Not yet checked against catalogues. Most such candidates are artifacts."]);
+    if (state.meta.note) rows.push(["Archive", state.meta.note]);
+  } else if (motion.fit) {
     const f = motion.fit;
     rows.push(["Measured", `${f.rate_arcsec_yr.toFixed(2)} +/- ${f.rate_err_arcsec_yr.toFixed(2)} arcsec/yr`]);
     rows.push(["Published", `${catalogue.published_rate.toFixed(2)} arcsec/yr`]);
@@ -243,8 +280,10 @@ function drawMotion() {
     rows.push(["Measured", "not a moving target"]);
   }
   rows.push(["Gaia check", `${alignment.frames_aligned} of ${alignment.frames} frames`]);
-  rows.push(["Star scatter", `${alignment.median_scatter_arcsec.toFixed(2)} arcsec`]);
-  rows.push(["Markings", "ring: catalogue position. Dashes: catalogue path. Crosses: measured."]);
+  if (alignment.median_scatter_arcsec !== null) {
+    rows.push(["Star scatter", `${alignment.median_scatter_arcsec.toFixed(2)} arcsec`]);
+  }
+  if (catalogue) rows.push(["Markings", "ring: catalogue position. Dashes: catalogue path. Crosses: measured."]);
   $("motion").innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
 }
 
@@ -391,16 +430,113 @@ async function chooseTarget() {
   const ra = parseFloat(params.get("ra"));
   const dec = parseFloat(params.get("dec"));
   if (Number.isFinite(ra) && Number.isFinite(dec)) {
-    const summary = await (await fetch("data/showcase/summary.json")).json();
-    for (const t of state.targets) {
-      const centre = summary[t.id].centre;
-      if (!centre) continue;
-      const [east, north] = project(ra, dec, centre[0], centre[1]);
-      if (Math.max(Math.abs(east), Math.abs(north)) < (centre[2] * 3600) / 2) return t.id;
-    }
-    return null;
+    const plate = findPlate(ra, dec);
+    return plate ? plate.id : null;
   }
-  return state.targets[0].id;
+  return (state.targets.find((t) => t.demo) || state.targets[0]).id;
+}
+
+// --- Your sky ---
+
+function findPlate(ra, dec) {
+  for (const t of state.targets) {
+    if (!t.centre) continue;
+    const [east, north] = project(ra, dec, t.centre[0], t.centre[1]);
+    if (Math.max(Math.abs(east), Math.abs(north)) < (t.centre[2] * 3600) / 2) return t;
+  }
+  return null;
+}
+
+function addAction(label, run) {
+  const button = document.createElement("button");
+  button.textContent = label;
+  button.addEventListener("click", run);
+  $("above-actions").append(button);
+}
+
+// The zenith is worked out here in the browser. Only the rounded patch is used.
+function lookUp(place) {
+  const [ra, dec] = zenith(place.lat, place.lon, new Date());
+  const [fieldRa, fieldDec] = fieldCentre(ra, dec);
+  $("above-actions").innerHTML = "";
+  let text = `Straight above ${place.label} right now: ${formatCoord(fieldRa, fieldDec)}. `;
+  const plate = findPlate(ra, dec);
+  if (plate) {
+    text += "A plate is stored for this patch. It shows what SPHEREx recorded there on earlier dates.";
+    openTarget(plate.id, plate.base);
+  } else {
+    text += "No plate is stored for this patch. ";
+    if (state.apiOn) {
+      text += "Tombaugh can build one from the SPHEREx archive, which takes a few minutes.";
+      addAction("Build this patch", () => startLive(fieldRa, fieldDec));
+    } else {
+      text += "Live lookups are off right now.";
+    }
+    const demo = state.targets.find((t) => t.demo);
+    if (demo) {
+      text += " The stored demo plate is a patch that passes over Singapore once a day.";
+      addAction(demo.name, () => openTarget(demo.id));
+    }
+  }
+  $("above-result").textContent = text;
+  $("above-result").hidden = false;
+}
+
+function lookUpTyped() {
+  const place = parsePlace($("place").value);
+  if (place) {
+    lookUp(place);
+  } else {
+    $("above-actions").innerHTML = "";
+    $("above-result").textContent =
+      "Place not recognised. Type a large city, or latitude and longitude such as 1.35, 103.82.";
+    $("above-result").hidden = false;
+  }
+}
+
+function lookUpHere() {
+  const fallback = () => {
+    $("above-result").textContent = "Location was not available, so the place in the box is used instead.";
+    $("above-result").hidden = false;
+    lookUpTyped();
+  };
+  if (!navigator.geolocation) return fallback();
+  navigator.geolocation.getCurrentPosition(
+    (pos) => lookUp({ lat: pos.coords.latitude, lon: pos.coords.longitude, label: "you" }),
+    fallback,
+    { maximumAge: 600000, timeout: 8000 }
+  );
+}
+
+// --- Live lookup ---
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function startLive(ra, dec) {
+  stop();
+  note("Asking the back end to build this patch.");
+  try {
+    const res = await fetch(`${API_URL}/api/field`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ra, dec, fov_deg: LIVE_FOV_DEG, detector: params.get("det") }),
+    });
+    let job = await res.json();
+    if (!res.ok) throw new Error(job.detail || `status ${res.status}`);
+    while (job.status === "queued" || job.status === "running") {
+      note(`${job.step} Step ${job.steps_done + 1} of ${job.steps_total}.`);
+      await sleep(2000);
+      job = await (await fetch(`${API_URL}/api/field/${job.job_id}`)).json();
+    }
+    if (job.status !== "done") throw new Error(job.error || "the job stopped");
+    const base = `${API_URL}${job.base_url}`;
+    if (!state.targets.some((t) => t.id === job.field_id)) {
+      state.targets.push({ id: job.field_id, name: job.name, centre: job.centre, base });
+    }
+    await openTarget(job.field_id, base);
+  } catch (err) {
+    note(`The live lookup did not finish: ${err.message}. Stored plates still work.`);
+  }
 }
 
 // --- Wiring ---
@@ -424,9 +560,15 @@ function wire() {
   $("b-sky").addEventListener("click", () => setLook("sky"));
   $("b-gaia").addEventListener("click", () => ((state.showGaia = !state.showGaia), draw()));
   canvas.addEventListener("click", pickPoint);
+  $("b-above").addEventListener("click", lookUpHere);
+  $("b-place").addEventListener("click", lookUpTyped);
+  $("place").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") lookUpTyped();
+  });
 
   document.addEventListener("keydown", (event) => {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.target instanceof HTMLInputElement) return;
     if (event.target instanceof HTMLButtonElement && event.key === " ") return;
     const key = event.key.toLowerCase();
     const actions = {
@@ -456,7 +598,8 @@ async function checkApi() {
   const el = $("api-status");
   try {
     const body = await (await fetch(`${API_URL}/api/health`)).json();
-    el.textContent = body.status === "ok" ? "on" : "off";
+    state.apiOn = body.status === "ok";
+    el.textContent = state.apiOn ? "on" : "off";
   } catch {
     el.textContent = "off. Precomputed plates still work.";
   }
@@ -472,7 +615,7 @@ async function start() {
   if (params.get("view") === "sky") state.look = "sky";
   fitCanvas();
   wire();
-  checkApi();
+  const apiChecked = checkApi();
   try {
     state.targets = await loadIndex();
   } catch {
@@ -482,7 +625,14 @@ async function start() {
   const id = await chooseTarget();
   drawTargets();
   if (!id) {
-    note("No precomputed plate covers this position. Live lookups arrive with the back end.");
+    // A shared link to a patch without a stored plate: build it if the back end is up
+    await apiChecked;
+    const [ra, dec] = fieldCentre(parseFloat(params.get("ra")), parseFloat(params.get("dec")));
+    if (state.apiOn) {
+      await startLive(ra, dec);
+    } else {
+      note("No plate is stored for this position, and live lookups are off right now.");
+    }
     return;
   }
   await openTarget(id);

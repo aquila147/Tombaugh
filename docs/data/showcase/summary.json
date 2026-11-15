@@ -1,4 +1,61 @@
 {
+  "singapore": {
+    "name": "120 Lachesis (A872 GB)",
+    "title": "Above Singapore, 2025-12-20",
+    "demo": true,
+    "centre": [
+      177.2657,
+      1.5368,
+      0.3
+    ],
+    "detectors": [
+      "D1",
+      "D2",
+      "D4",
+      "D5"
+    ],
+    "stacks": 8,
+    "alignment": {
+      "frames": 22,
+      "frames_aligned": 22,
+      "median_stars_per_frame": 26.0,
+      "median_offset_arcsec": 0.49706534047636475,
+      "median_scatter_arcsec": 0.3976382697225833,
+      "frame_shift_std_arcsec": 0.13586133934059377
+    },
+    "confirmation": {
+      "asteroid": "120 Lachesis (A872 GB)",
+      "jpl_vmag": "13.4",
+      "jpl_rate_arcsec_hr": 27.37,
+      "exposures": 22,
+      "visit_stacks": 8,
+      "visit_stacks_with_detection": 8,
+      "detectors_with_detection": [
+        "D1",
+        "D2",
+        "D4",
+        "D5"
+      ],
+      "span_hours": 17.8,
+      "measured_rate_arcsec_hr": 27.34,
+      "measured_rate_err_arcsec_hr": 0.05,
+      "track_residual_rms_arcsec": 0.89,
+      "measured_shift_arcsec": 487.8,
+      "engine": {
+        "detector": "D2",
+        "exposures_in_run": 33,
+        "exposures_in_window": 7,
+        "fast_tracks_found": 1,
+        "blind_track_matches_asteroid": {
+          "exposures": 7,
+          "rate_arcsec_hr": 27.33,
+          "span_hours": 17.9
+        },
+        "mean_peaks_before": 64.88,
+        "mean_peaks_after": 0.97
+      }
+    }
+  },
   "wise0855": {
     "name": "WISE 0855-0714",
     "detectors": [
