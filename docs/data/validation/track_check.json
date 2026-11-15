@@ -1,0 +1,555 @@
+{
+  "wise0855_D5": {
+    "real_data_tracks": [
+      {
+        "ra": 133.7598,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null
+      }
+    ],
+    "unmatched_tracks_in_synthetic_runs": [
+      {
+        "ra": 133.78251,
+        "dec": -7.21753,
+        "mjd": 60986.6516,
+        "frames": 3,
+        "rate_arcsec_hr": 36.4,
+        "span_hours": 14.7,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.7598,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.7598,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.85173,
+        "dec": -7.27579,
+        "mjd": 61162.1311,
+        "frames": 3,
+        "rate_arcsec_hr": 23.2,
+        "span_hours": 19.6,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.82751,
+        "dec": -7.24387,
+        "mjd": 60986.3327,
+        "frames": 3,
+        "rate_arcsec_hr": 109.8,
+        "span_hours": 3.3,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.7598,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.81004,
+        "dec": -7.18381,
+        "mjd": 60986.3327,
+        "frames": 3,
+        "rate_arcsec_hr": 39.4,
+        "span_hours": 3.3,
+        "known_object": null,
+        "peak_snr": 7,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 7,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 7,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.7443,
+        "dec": -7.28508,
+        "mjd": 60986.3332,
+        "frames": 3,
+        "rate_arcsec_hr": 56.4,
+        "span_hours": 3.3,
+        "known_object": null,
+        "peak_snr": 7,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.7598,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 7,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.7976,
+        "dec": -7.19751,
+        "mjd": 61162.2218,
+        "frames": 3,
+        "rate_arcsec_hr": 15.5,
+        "span_hours": 26.0,
+        "known_object": null,
+        "peak_snr": 7,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 10,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.72955,
+        "dec": -7.31741,
+        "mjd": 60986.4233,
+        "frames": 3,
+        "rate_arcsec_hr": 8.9,
+        "span_hours": 13.0,
+        "known_object": null,
+        "peak_snr": 10,
+        "detections": 3,
+        "detections_on_planted_sources": 1,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 10,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.83938,
+        "dec": -7.16835,
+        "mjd": 60986.3327,
+        "frames": 3,
+        "rate_arcsec_hr": 18.1,
+        "span_hours": 3.3,
+        "known_object": null,
+        "peak_snr": 10,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.7727,
+        "dec": -7.15863,
+        "mjd": 60986.3332,
+        "frames": 3,
+        "rate_arcsec_hr": 64.9,
+        "span_hours": 3.3,
+        "known_object": null,
+        "peak_snr": 10,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 10,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.81555,
+        "dec": -7.32322,
+        "mjd": 60986.3332,
+        "frames": 3,
+        "rate_arcsec_hr": 90.8,
+        "span_hours": 3.3,
+        "known_object": null,
+        "peak_snr": 15,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 15,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 15,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 15,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.77577,
+        "dec": -7.22258,
+        "mjd": 61162.1311,
+        "frames": 3,
+        "rate_arcsec_hr": 32.4,
+        "span_hours": 19.6,
+        "known_object": null,
+        "peak_snr": 15,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 25,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.7598,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 25,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      },
+      {
+        "ra": 133.75979,
+        "dec": -7.23581,
+        "mjd": 60986.7204,
+        "frames": 3,
+        "rate_arcsec_hr": 26.8,
+        "span_hours": 13.2,
+        "known_object": null,
+        "peak_snr": 25,
+        "detections": 3,
+        "detections_on_planted_sources": 0,
+        "same_as_real_data_track": true
+      }
+    ]
+  },
+  "wise0855_D6": {
+    "real_data_tracks": [
+      {
+        "ra": 133.77693,
+        "dec": -7.23158,
+        "mjd": 60993.6662,
+        "frames": 3,
+        "rate_arcsec_hr": 35.5,
+        "span_hours": 9.8,
+        "known_object": null
+      }
+    ]
+  },
+  "barnard_D3": {
+    "real_data_tracks": [],
+    "unmatched_tracks_in_synthetic_runs": []
+  },
+  "barnard_D4": {
+    "real_data_tracks": [
+      {
+        "ra": 269.45865,
+        "dec": 4.85087,
+        "mjd": 61110.5217,
+        "frames": 3,
+        "rate_arcsec_hr": 1.9,
+        "span_hours": 16.3,
+        "known_object": null
+      },
+      {
+        "ra": 269.45138,
+        "dec": 4.83412,
+        "mjd": 61110.3658,
+        "frames": 3,
+        "rate_arcsec_hr": 41.8,
+        "span_hours": 11.3,
+        "known_object": null
+      },
+      {
+        "ra": 269.48679,
+        "dec": 4.78636,
+        "mjd": 61110.4324,
+        "frames": 3,
+        "rate_arcsec_hr": 10.8,
+        "span_hours": 13.0,
+        "known_object": null
+      },
+      {
+        "ra": 269.38231,
+        "dec": 4.79762,
+        "mjd": 61110.5468,
+        "frames": 3,
+        "rate_arcsec_hr": 50.5,
+        "span_hours": 4.9,
+        "known_object": null
+      },
+      {
+        "ra": 269.51775,
+        "dec": 4.76309,
+        "mjd": 61110.5458,
+        "frames": 3,
+        "rate_arcsec_hr": 79.8,
+        "span_hours": 4.8,
+        "known_object": null
+      },
+      {
+        "ra": 269.51625,
+        "dec": 4.73846,
+        "mjd": 61110.5468,
+        "frames": 3,
+        "rate_arcsec_hr": 46.5,
+        "span_hours": 4.8,
+        "known_object": null
+      }
+    ]
+  },
+  "eps_indi_b_D2": {
+    "real_data_tracks": [],
+    "unmatched_tracks_in_synthetic_runs": [
+      {
+        "ra": 331.01541,
+        "dec": -56.8461,
+        "mjd": 60790.263,
+        "frames": 3,
+        "rate_arcsec_hr": 9.6,
+        "span_hours": 29.3,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 331.10744,
+        "dec": -56.7652,
+        "mjd": 60949.8383,
+        "frames": 3,
+        "rate_arcsec_hr": 10.9,
+        "span_hours": 6.5,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 331.06032,
+        "dec": -56.83625,
+        "mjd": 60832.6767,
+        "frames": 3,
+        "rate_arcsec_hr": 55.3,
+        "span_hours": 1.6,
+        "known_object": null,
+        "peak_snr": 5,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 331.1304,
+        "dec": -56.77107,
+        "mjd": 60949.9306,
+        "frames": 3,
+        "rate_arcsec_hr": 102.7,
+        "span_hours": 6.6,
+        "known_object": null,
+        "peak_snr": 7,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 331.20226,
+        "dec": -56.80611,
+        "mjd": 60954.3668,
+        "frames": 4,
+        "rate_arcsec_hr": 32.4,
+        "span_hours": 4.9,
+        "known_object": null,
+        "peak_snr": 10,
+        "detections": 4,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 331.20121,
+        "dec": -56.74453,
+        "mjd": 60954.322,
+        "frames": 3,
+        "rate_arcsec_hr": 25.3,
+        "span_hours": 1.6,
+        "known_object": null,
+        "peak_snr": 15,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 331.13502,
+        "dec": -56.77219,
+        "mjd": 60949.8853,
+        "frames": 4,
+        "rate_arcsec_hr": 44.2,
+        "span_hours": 6.6,
+        "known_object": null,
+        "peak_snr": 25,
+        "detections": 4,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 331.02488,
+        "dec": -56.81243,
+        "mjd": 60949.9741,
+        "frames": 3,
+        "rate_arcsec_hr": 70.5,
+        "span_hours": 8.2,
+        "known_object": null,
+        "peak_snr": 25,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      },
+      {
+        "ra": 331.07444,
+        "dec": -56.78826,
+        "mjd": 60949.975,
+        "frames": 3,
+        "rate_arcsec_hr": 76.1,
+        "span_hours": 8.2,
+        "known_object": null,
+        "peak_snr": 25,
+        "detections": 3,
+        "detections_on_planted_sources": 2,
+        "same_as_real_data_track": false
+      }
+    ]
+  },
+  "eps_indi_b_D3": {
+    "real_data_tracks": []
+  }
+}

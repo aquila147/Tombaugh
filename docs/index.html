@@ -61,14 +61,22 @@
           <button id="b-stack" aria-pressed="false">Stack</button>
         </div>
         <div class="row" id="detectors" aria-label="Detector"></div>
+        <div class="row" id="engine-row">
+          <button id="b-before" aria-pressed="false">Before</button>
+          <button id="b-after" aria-pressed="false">After</button>
+        </div>
+        <p class="caption" id="engine-caption">
+          Before: each exposure minus the median, over the image noise. After: the same
+          exposure with each pixel judged against its own measured scatter.
+        </p>
         <div class="legend" id="legend" hidden>
           <span><i class="swatch was"></i>was here</span>
           <span><i class="swatch now"></i>is here now</span>
-          <span class="dim">frame minus frame A</span>
+          <span class="dim" id="legend-note">frame minus frame A</span>
         </div>
         <p class="keys">
-          Keys: space play, arrows step, B blink, D difference, S stack, P plate or sky, G
-          Gaia.
+          Keys: space play, arrows step, B blink, D difference, S stack, E before or after,
+          P plate or sky, G Gaia.
         </p>
       </section>
 

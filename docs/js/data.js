@@ -34,6 +34,33 @@ export function stretchValue(flux, lo, hi) {
   return Math.asinh(10 * scaled) / ASINH10;
 }
 
+// Before and after significance maps from the engine, or null if this plate has none.
+export async function loadEngine(id, size) {
+  const res = await fetch(`${BASE}/${id}/engine/engine.json`);
+  if (!res.ok) return null;
+  const meta = await res.json();
+  const scratch = document.createElement("canvas");
+  scratch.width = scratch.height = size;
+  const ctx = scratch.getContext("2d", { willReadFrequently: true });
+  const files = meta.frames.flatMap((f) => [f.before, f.after]);
+  const loaded = await Promise.all(files.map((f) => loadImage(`${BASE}/${id}/engine/${f}`)));
+  const images = Object.fromEntries(files.map((f, i) => [f, loaded[i]]));
+  const read = (file) => {
+    ctx.drawImage(images[file], 0, 0);
+    const rgba = ctx.getImageData(0, 0, size, size).data;
+    const sigma = new Float32Array(size * size);
+    for (let p = 0; p < sigma.length; p++) {
+      sigma[p] = ((rgba[p * 4] / 255) * 2 - 1) * meta.sigma_range;
+    }
+    return sigma;
+  };
+  const frames = [];
+  for (const f of meta.frames) {
+    frames.push({ ...f, before: read(f.before), after: read(f.after) });
+  }
+  return { ...meta, frames };
+}
+
 export async function loadTarget(id) {
   const meta = await (await fetch(`${BASE}/${id}/meta.json`)).json();
   const size = meta.size;

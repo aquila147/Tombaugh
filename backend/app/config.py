@@ -145,3 +145,8 @@ SLOW_MIN_RATE_ARCSEC_YR = 1.0
 # Bright stars used to measure the field's own false velocities
 SLOW_STAR_SNR = 20.0
 SLOW_MIN_STARS = 8
+
+# --- Known solar-system objects ---
+
+SB_IDENT_URL = "https://ssd-api.jpl.nasa.gov/sb_ident.api"
+SB_VMAG_LIMIT = 21

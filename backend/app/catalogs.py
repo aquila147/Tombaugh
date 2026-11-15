@@ -4,9 +4,11 @@ import csv
 import io
 import json
 import logging
+import re
 from urllib.parse import urlencode
 
 import numpy as np
+from astropy.time import Time
 
 from app import archive, config
 
@@ -57,3 +59,71 @@ def gaia_at_epoch(stars: list[dict], mjd: float) -> tuple[np.ndarray, np.ndarray
     dec_now = dec + pmdec * years / 3.6e6
     ra_now = ra + pmra * years / 3.6e6 / np.cos(np.radians(dec))
     return ra_now, dec_now
+
+
+# --- JPL Small-Body Identification ---
+
+
+def sexagesimal(value: float, is_dec: bool) -> str:
+    """Degrees to the hh-mm-ss or dd-mm-ss form sb_ident expects (M marks minus)."""
+    sign = "M" if value < 0 else ""
+    total = abs(value) / (1 if is_dec else 15) * 3600
+    whole, minutes, seconds = int(total // 3600), int(total % 3600 // 60), total % 60
+    return f"{sign}{whole:02d}-{minutes:02d}-{seconds:05.2f}"
+
+
+def parse_sexagesimal(text: str, is_dec: bool) -> float:
+    parts = [float(p) for p in re.findall(r"[\d.]+", text)]
+    value = parts[0] + parts[1] / 60 + parts[2] / 3600
+    if text.strip().startswith("-"):
+        value = -value
+    return value if is_dec else value * 15
+
+
+def known_small_bodies(
+    ra: float, dec: float, mjd: float, half_width_deg: float
+) -> list[dict]:
+    """Known asteroids and comets in a field at a time, from JPL sb_ident.
+
+    Geocentric observer. Positions are the returned RA and Dec, not the
+    rounded distance columns. A magnitude limit keeps the query from timing out.
+    """
+    name = f"{ra:.4f}_{dec:+.4f}_{mjd:.4f}_{half_width_deg:.3f}_{config.SB_VMAG_LIMIT}.json"
+    path = config.CACHE_DIR / "sb_ident" / name
+    if path.is_file():
+        return json.loads(path.read_text())
+    when = Time(mjd, format="mjd").utc.strftime("%Y-%m-%d_%H:%M:%S")
+    bodies = []
+    for kind in ("a", "c"):
+        params = {
+            "sb-kind": kind,
+            "mpc-code": "500",
+            "obs-time": when,
+            "fov-ra-center": sexagesimal(ra, False),
+            "fov-dec-center": sexagesimal(dec, True),
+            "fov-ra-hwidth": f"{half_width_deg:.3f}",
+            "fov-dec-hwidth": f"{half_width_deg:.3f}",
+            "vmag-lim": str(config.SB_VMAG_LIMIT),
+            "two-pass": "true",
+        }
+        reply = json.loads(
+            archive.http_get(f"{config.SB_IDENT_URL}?{urlencode(params)}")
+        )
+        fields = reply.get("fields_second", [])
+        for row in reply.get("data_second_pass", []):
+            entry = dict(zip(fields, row))
+            bodies.append(
+                {
+                    "name": entry["Object name"],
+                    "ra": parse_sexagesimal(entry["Astrometric RA (hh:mm:ss)"], False),
+                    "dec": parse_sexagesimal(
+                        entry["Astrometric Dec (dd mm'ss\")"], True
+                    ),
+                    "vmag": entry.get("Visual magnitude (V)"),
+                    "ra_rate_arcsec_hr": float(entry['RA rate ("/h)']),
+                    "dec_rate_arcsec_hr": float(entry['Dec rate ("/h)']),
+                }
+            )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(bodies))
+    return bodies

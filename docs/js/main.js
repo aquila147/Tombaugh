@@ -1,5 +1,5 @@
 import { API_URL } from "../config.js";
-import { loadIndex, loadTarget } from "./data.js";
+import { loadEngine, loadIndex, loadTarget } from "./data.js";
 import { render, stackValues } from "./player.js";
 import { drawPlot } from "./plots.js";
 import { formatCoord, imageToSky, project } from "./sky.js";
@@ -31,6 +31,9 @@ const state = {
   pick: null,
   stacks: {},
   timer: null,
+  side: "after",
+  engine: null,
+  visits: [],
 };
 
 // --- Loading ---
@@ -45,31 +48,73 @@ async function openTarget(id) {
   note("Loading plate.");
   try {
     const { meta, frames } = await loadTarget(id);
-    Object.assign(state, { id, meta, all: frames, stacks: {}, pick: null });
+    Object.assign(state, { id, meta, all: frames, stacks: {}, pick: null, engine: null });
   } catch (err) {
     note("This plate could not be loaded.");
     return;
   }
   const wanted = params.get("det");
   const detectors = Object.keys(state.meta.stretch);
+  const wantEngine = state.mode === "engine";
   setDetector(detectors.includes(wanted) ? wanted : detectors[0]);
   drawTargets();
   drawDetectors();
   drawMotion();
   clearPlots();
   const releases = new Set(state.all.flatMap((f) => f.collections));
-  $("release-note").hidden = releases.size < 2;
+  state.mixed = releases.size > 1;
   note("");
+  if (wantEngine) await showEngine(state.side);
   if (!reducedMotion && state.mode === "frames") play();
   draw();
 }
 
-function setDetector(detector) {
-  state.detector = detector;
-  state.frames = state.all.filter((f) => f.detector === detector);
+function useFrames(frames) {
+  state.frames = frames;
   state.index = 0;
   state.a = 0;
-  state.b = state.frames.length - 1;
+  state.b = frames.length - 1;
+}
+
+function setDetector(detector) {
+  state.detector = detector;
+  if (state.mode === "engine") state.mode = "frames";
+  useFrames(state.all.filter((f) => f.detector === detector));
+}
+
+// --- Engine before and after ---
+
+// Single exposures from Data Release 1, as significance maps.
+async function showEngine(side) {
+  if (!state.meta) return;
+  stop();
+  if (state.engine === null) {
+    note("Loading engine maps.");
+    try {
+      state.engine = (await loadEngine(state.id, state.meta.size)) || false;
+    } catch {
+      state.engine = false;
+    }
+    note("");
+  }
+  if (!state.engine) {
+    state.mode = "frames";
+    note("No engine run for this plate.");
+    setTimeout(() => note(""), 2500);
+    draw();
+    return;
+  }
+  state.side = side;
+  if (state.mode !== "engine") {
+    const index = state.index;
+    state.mode = "engine";
+    state.detector = state.engine.detector;
+    useFrames(state.engine.frames);
+    state.index = Math.min(index, state.frames.length - 1);
+    drawDetectors();
+  }
+  draw();
+  updateUrl();
 }
 
 // --- Drawing ---
@@ -96,6 +141,7 @@ function draw() {
     mode: state.mode,
     look: state.look,
     stack: state.stacks[state.detector],
+    side: state.side,
     showGaia: state.showGaia,
     pick: state.pick,
   });
@@ -105,7 +151,12 @@ function draw() {
 function drawFacts(frame) {
   const n = state.frames.length;
   const release = frame.collections.join(", ").replaceAll("spherex_", "").toUpperCase();
-  const what = { frames: "frame", diff: "difference from frame A", stack: `stack of ${n} visits` }[state.mode];
+  const what = {
+    frames: "frame",
+    diff: "difference from frame A",
+    stack: `stack of ${n} visits`,
+    engine: state.side === "before" ? "before: plain difference, image noise" : "after: residual, per-pixel noise",
+  }[state.mode];
   const rows = [
     ["Date", `${frame.date.replace("T", " ")} UTC`],
     ["Wavelength", `${frame.wavelength_um.toFixed(3)} um`],
@@ -115,6 +166,11 @@ function drawFacts(frame) {
     ["Frame", `${state.index + 1} of ${n}   A ${state.a + 1}   B ${state.b + 1}`],
     ["Showing", what],
   ];
+  if (state.mode === "engine") {
+    const e = state.engine;
+    rows.push(["5 sigma peaks", `this frame ${frame.peaks_before} before, ${frame.peaks_after} after`]);
+    rows.push(["Run mean", `${e.mean_peaks_before} before, ${e.mean_peaks_after} after, over ${e.frames_in_run} exposures`]);
+  }
   $("facts").innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
   const line = `${frame.date.replace("T", " ")} UTC   ${frame.wavelength_um.toFixed(3)} um   ${frame.detector}   ${release}`;
   $("frame-line").textContent = state.mode === "stack" ? `Stack of ${n} visits   ${frame.detector}   ${release}` : line;
@@ -122,7 +178,12 @@ function drawFacts(frame) {
     "aria-label",
     `${state.meta.name}, ${what}, ${state.look} view. ${line}. Frame ${state.index + 1} of ${n}.`
   );
-  $("legend").hidden = state.mode !== "diff";
+  $("legend").hidden = state.mode !== "diff" && state.mode !== "engine";
+  $("legend-note").textContent = state.mode === "engine" ? "tone grows from 3 to 8 sigma" : "frame minus frame A";
+  // Engine maps are built from one release only
+  $("release-note").hidden = !state.mixed || state.mode === "engine";
+  press("b-before",state.mode === "engine" && state.side === "before");
+  press("b-after", state.mode === "engine" && state.side === "after");
   $("b-play").textContent = state.playing ? "Pause" : "Play";
   press("b-play", state.playing);
   press("b-blink", state.blinking);
@@ -221,6 +282,11 @@ function step(by, keepPlaying = false) {
 }
 
 function setMode(mode) {
+  if (state.mode === "engine") {
+    state.mode = "frames";
+    setDetector(state.detector);
+    drawDetectors();
+  }
   state.mode = state.mode === mode ? "frames" : mode;
   if (state.mode === "stack") stop();
   draw();
@@ -312,7 +378,7 @@ function updateUrl() {
   next.set("dec", state.meta.dec.toFixed(4));
   next.set("fov", String(state.meta.fov_deg));
   next.set("det", state.detector);
-  next.set("mode", state.mode);
+  next.set("mode", state.mode === "engine" ? state.side : state.mode);
   if (state.look === "sky") next.set("view", "sky");
   if (params.get("embed") === "1") next.set("embed", "1");
   history.replaceState(null, "", `?${next}`);
@@ -352,6 +418,8 @@ function wire() {
   $("b-seta").addEventListener("click", () => ((state.a = state.index), draw()));
   $("b-setb").addEventListener("click", () => ((state.b = state.index), draw()));
   for (const mode of MODES) $(`b-${mode}`).addEventListener("click", () => setMode(mode));
+  $("b-before").addEventListener("click", () => showEngine("before"));
+  $("b-after").addEventListener("click", () => showEngine("after"));
   $("b-plate").addEventListener("click", () => setLook("plate"));
   $("b-sky").addEventListener("click", () => setLook("sky"));
   $("b-gaia").addEventListener("click", () => ((state.showGaia = !state.showGaia), draw()));
@@ -368,6 +436,7 @@ function wire() {
       b: () => $("b-blink").click(),
       d: () => setMode("diff"),
       s: () => setMode("stack"),
+      e: () => showEngine(state.mode === "engine" && state.side === "before" ? "after" : "before"),
       p: () => setLook(state.look === "plate" ? "sky" : "plate"),
       g: () => $("b-gaia").click(),
     };
@@ -396,6 +465,10 @@ async function checkApi() {
 async function start() {
   if (params.get("embed") === "1") document.body.classList.add("embed");
   if (MODES.includes(params.get("mode"))) state.mode = params.get("mode");
+  if (["before", "after"].includes(params.get("mode"))) {
+    state.mode = "engine";
+    state.side = params.get("mode");
+  }
   if (params.get("view") === "sky") state.look = "sky";
   fitCanvas();
   wire();

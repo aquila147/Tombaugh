@@ -16,6 +16,8 @@ const DIFF_TONES = {
 };
 const DIFF_FLOOR_SIGMA = 2;
 const DIFF_FULL_SIGMA = 8;
+// Engine maps start to show at 3 sigma, so a 5 sigma peak is clearly marked
+const ENGINE_FLOOR_SIGMA = 3;
 
 const offscreen = document.createElement("canvas");
 
@@ -36,19 +38,25 @@ function paintValues(rgba, values, view) {
   }
 }
 
-function paintDifference(rgba, frame, reference, view) {
+// Two neutral tones on a mid background, from a map in units of sigma.
+function paintSigma(rgba, sigmaAt, count, view, floor) {
   const tones = DIFF_TONES[view];
-  const noise = Math.hypot(frame.noise, reference.noise);
-  for (let p = 0; p < frame.flux.length; p++) {
-    const sigma = (frame.flux[p] - reference.flux[p]) / noise;
+  for (let p = 0; p < count; p++) {
+    const sigma = sigmaAt(p);
     const size = Math.abs(sigma);
-    const t = Math.min(1, Math.max(0, (size - DIFF_FLOOR_SIGMA) / (DIFF_FULL_SIGMA - DIFF_FLOOR_SIGMA)));
+    const t = Math.min(1, Math.max(0, (size - floor) / (DIFF_FULL_SIGMA - floor)));
     const c = mix(tones.bg, sigma > 0 ? tones.now : tones.was, t);
     rgba[p * 4] = c[0];
     rgba[p * 4 + 1] = c[1];
     rgba[p * 4 + 2] = c[2];
     rgba[p * 4 + 3] = 255;
   }
+}
+
+function paintDifference(rgba, frame, reference, view) {
+  const noise = Math.hypot(frame.noise, reference.noise);
+  const sigmaAt = (p) => (frame.flux[p] - reference.flux[p]) / noise;
+  paintSigma(rgba, sigmaAt, frame.flux.length, view, DIFF_FLOOR_SIGMA);
 }
 
 // Mean of all frames of one detector, shown with that detector's stretch.
@@ -72,6 +80,9 @@ export function render(canvas, view) {
 
   if (view.mode === "diff") {
     paintDifference(image.data, view.frame, view.reference, view.look);
+  } else if (view.mode === "engine") {
+    const map = view.frame[view.side];
+    paintSigma(image.data, (p) => map[p], map.length, view.look, ENGINE_FLOOR_SIGMA);
   } else if (view.mode === "stack") {
     paintValues(image.data, view.stack, view.look);
   } else {
