@@ -1,0 +1,882 @@
+{
+  "wise0855_D5": {
+    "target": "WISE 0855-0714",
+    "detector": "D5",
+    "collection": "spherex_dr1",
+    "frames": 48,
+    "area_sq_deg": 0.04000000000000001,
+    "peaks_per_frame_5_sigma": {
+      "plain_vs_first_frame": {
+        "median": 9.0,
+        "mean": 9.04,
+        "total": 425,
+        "frames": 47
+      },
+      "plain_vs_median": {
+        "median": 11.0,
+        "mean": 12.08,
+        "total": 580,
+        "frames": 48
+      },
+      "plain_vs_median_local_noise": {
+        "median": 2.0,
+        "mean": 2.08,
+        "total": 100,
+        "frames": 48
+      },
+      "fit_only": {
+        "median": 11.0,
+        "mean": 10.9,
+        "total": 523,
+        "frames": 48
+      },
+      "fit_only_local_noise": {
+        "median": 2.0,
+        "mean": 2.25,
+        "total": 108,
+        "frames": 48
+      },
+      "fit_and_match": {
+        "median": 9.0,
+        "mean": 9.44,
+        "total": 453,
+        "frames": 48
+      },
+      "fit_and_match_local_noise": {
+        "median": 2.0,
+        "mean": 2.96,
+        "total": 142,
+        "frames": 48
+      }
+    },
+    "variants": {
+      "fit": {
+        "detections": 108,
+        "target_recovery": {
+          "frames": 48,
+          "span_years": 1.02,
+          "frames_with_residual_detection": 1,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": true,
+          "offset_arcsec": 4.3,
+          "snr": 6.0,
+          "rate_arcsec_yr": 5.45,
+          "rate_err_arcsec_yr": 0.91,
+          "pm_east_arcsec_yr": -5.38,
+          "pm_north_arcsec_yr": 0.83,
+          "catalogue_pm_east_north": [
+            -8.118,
+            0.68
+          ],
+          "rank_in_field": 1,
+          "field_calibration": {
+            "error_scale": 1.93,
+            "star_drift_arcsec_yr": [
+              0.0,
+              -0.09
+            ],
+            "star_spread_arcsec_yr": 0.23,
+            "stars_used": 40
+          }
+        },
+        "fast_tracks_in_real_data": 1,
+        "injection_synthetic": {
+          "psf_sigma_arcsec": 4.42,
+          "levels": [
+            {
+              "peak_snr": 5,
+              "planted": 30,
+              "seen_in_3_frames": 4,
+              "linked": 1,
+              "fraction_linked": 0.033,
+              "extra_false_tracks": 4
+            },
+            {
+              "peak_snr": 7,
+              "planted": 30,
+              "seen_in_3_frames": 21,
+              "linked": 21,
+              "fraction_linked": 0.7,
+              "extra_false_tracks": 3
+            },
+            {
+              "peak_snr": 10,
+              "planted": 30,
+              "seen_in_3_frames": 30,
+              "linked": 27,
+              "fraction_linked": 0.9,
+              "extra_false_tracks": 4
+            },
+            {
+              "peak_snr": 15,
+              "planted": 30,
+              "seen_in_3_frames": 29,
+              "linked": 29,
+              "fraction_linked": 0.967,
+              "extra_false_tracks": 9
+            },
+            {
+              "peak_snr": 25,
+              "planted": 30,
+              "seen_in_3_frames": 30,
+              "linked": 30,
+              "fraction_linked": 1.0,
+              "extra_false_tracks": 3
+            }
+          ]
+        }
+      },
+      "match": {
+        "detections": 142,
+        "target_recovery": {
+          "frames": 48,
+          "span_years": 1.02,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": true,
+          "offset_arcsec": 4.3,
+          "snr": 6.0,
+          "rate_arcsec_yr": 5.45,
+          "rate_err_arcsec_yr": 0.91,
+          "pm_east_arcsec_yr": -5.38,
+          "pm_north_arcsec_yr": 0.83,
+          "catalogue_pm_east_north": [
+            -8.118,
+            0.68
+          ],
+          "rank_in_field": 1,
+          "field_calibration": {
+            "error_scale": 1.93,
+            "star_drift_arcsec_yr": [
+              0.0,
+              -0.09
+            ],
+            "star_spread_arcsec_yr": 0.23,
+            "stars_used": 40
+          }
+        },
+        "fast_tracks_in_real_data": 2,
+        "injection_synthetic": {
+          "psf_sigma_arcsec": 4.42,
+          "levels": [
+            {
+              "peak_snr": 5,
+              "planted": 30,
+              "seen_in_3_frames": 0,
+              "linked": 0,
+              "fraction_linked": 0.0,
+              "extra_false_tracks": 1
+            },
+            {
+              "peak_snr": 7,
+              "planted": 30,
+              "seen_in_3_frames": 13,
+              "linked": 13,
+              "fraction_linked": 0.433,
+              "extra_false_tracks": 0
+            },
+            {
+              "peak_snr": 10,
+              "planted": 30,
+              "seen_in_3_frames": 25,
+              "linked": 21,
+              "fraction_linked": 0.7,
+              "extra_false_tracks": 5
+            },
+            {
+              "peak_snr": 15,
+              "planted": 30,
+              "seen_in_3_frames": 28,
+              "linked": 27,
+              "fraction_linked": 0.9,
+              "extra_false_tracks": 8
+            },
+            {
+              "peak_snr": 25,
+              "planted": 30,
+              "seen_in_3_frames": 30,
+              "linked": 30,
+              "fraction_linked": 1.0,
+              "extra_false_tracks": 2
+            }
+          ]
+        }
+      }
+    }
+  },
+  "wise0855_D6": {
+    "target": "WISE 0855-0714",
+    "detector": "D6",
+    "collection": "spherex_dr1",
+    "frames": 45,
+    "area_sq_deg": 0.04000000000000001,
+    "peaks_per_frame_5_sigma": {
+      "plain_vs_first_frame": {
+        "median": 9.5,
+        "mean": 9.64,
+        "total": 424,
+        "frames": 44
+      },
+      "plain_vs_median": {
+        "median": 6.0,
+        "mean": 7.4,
+        "total": 333,
+        "frames": 45
+      },
+      "plain_vs_median_local_noise": {
+        "median": 4.0,
+        "mean": 3.98,
+        "total": 179,
+        "frames": 45
+      },
+      "fit_only": {
+        "median": 6.0,
+        "mean": 6.71,
+        "total": 302,
+        "frames": 45
+      },
+      "fit_only_local_noise": {
+        "median": 4.0,
+        "mean": 4.04,
+        "total": 182,
+        "frames": 45
+      },
+      "fit_and_match": {
+        "median": 8.0,
+        "mean": 9.13,
+        "total": 411,
+        "frames": 45
+      },
+      "fit_and_match_local_noise": {
+        "median": 6.0,
+        "mean": 6.84,
+        "total": 308,
+        "frames": 45
+      }
+    },
+    "variants": {
+      "fit": {
+        "detections": 182,
+        "target_recovery": {
+          "frames": 45,
+          "span_years": 1.01,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": true,
+          "offset_arcsec": 0.4,
+          "snr": 8.6,
+          "rate_arcsec_yr": 6.23,
+          "rate_err_arcsec_yr": 0.72,
+          "pm_east_arcsec_yr": -6.17,
+          "pm_north_arcsec_yr": 0.86,
+          "catalogue_pm_east_north": [
+            -8.118,
+            0.68
+          ],
+          "rank_in_field": 1,
+          "field_calibration": {
+            "error_scale": 1.8,
+            "star_drift_arcsec_yr": [
+              -0.1,
+              0.2
+            ],
+            "star_spread_arcsec_yr": 0.35,
+            "stars_used": 26
+          }
+        },
+        "fast_tracks_in_real_data": 1
+      },
+      "match": {
+        "detections": 308,
+        "target_recovery": {
+          "frames": 45,
+          "span_years": 1.01,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": true,
+          "offset_arcsec": 0.4,
+          "snr": 8.6,
+          "rate_arcsec_yr": 6.23,
+          "rate_err_arcsec_yr": 0.72,
+          "pm_east_arcsec_yr": -6.17,
+          "pm_north_arcsec_yr": 0.86,
+          "catalogue_pm_east_north": [
+            -8.118,
+            0.68
+          ],
+          "rank_in_field": 1,
+          "field_calibration": {
+            "error_scale": 1.8,
+            "star_drift_arcsec_yr": [
+              -0.1,
+              0.2
+            ],
+            "star_spread_arcsec_yr": 0.35,
+            "stars_used": 26
+          }
+        },
+        "fast_tracks_in_real_data": 1
+      }
+    }
+  },
+  "barnard_D3": {
+    "target": "Barnard's Star",
+    "detector": "D3",
+    "collection": "spherex_dr1",
+    "frames": 38,
+    "area_sq_deg": 0.04000000000000001,
+    "peaks_per_frame_5_sigma": {
+      "plain_vs_first_frame": {
+        "median": 193.0,
+        "mean": 187.92,
+        "total": 6953,
+        "frames": 37
+      },
+      "plain_vs_median": {
+        "median": 194.0,
+        "mean": 182.89,
+        "total": 6950,
+        "frames": 38
+      },
+      "plain_vs_median_local_noise": {
+        "median": 0.0,
+        "mean": 0.03,
+        "total": 1,
+        "frames": 38
+      },
+      "fit_only": {
+        "median": 175.5,
+        "mean": 178.58,
+        "total": 6786,
+        "frames": 38
+      },
+      "fit_only_local_noise": {
+        "median": 0.0,
+        "mean": 0.0,
+        "total": 0,
+        "frames": 38
+      },
+      "fit_and_match": {
+        "median": 201.0,
+        "mean": 193.95,
+        "total": 7370,
+        "frames": 38
+      },
+      "fit_and_match_local_noise": {
+        "median": 0.0,
+        "mean": 0.26,
+        "total": 10,
+        "frames": 38
+      }
+    },
+    "variants": {
+      "fit": {
+        "detections": 0,
+        "target_recovery": {
+          "frames": 38,
+          "span_years": 0.72,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": false
+        },
+        "fast_tracks_in_real_data": 0,
+        "injection_synthetic": {
+          "psf_sigma_arcsec": 3.97,
+          "levels": [
+            {
+              "peak_snr": 5,
+              "planted": 30,
+              "seen_in_3_frames": 14,
+              "linked": 9,
+              "fraction_linked": 0.3,
+              "extra_false_tracks": 1
+            },
+            {
+              "peak_snr": 7,
+              "planted": 30,
+              "seen_in_3_frames": 21,
+              "linked": 15,
+              "fraction_linked": 0.5,
+              "extra_false_tracks": 3
+            },
+            {
+              "peak_snr": 10,
+              "planted": 30,
+              "seen_in_3_frames": 24,
+              "linked": 16,
+              "fraction_linked": 0.533,
+              "extra_false_tracks": 3
+            },
+            {
+              "peak_snr": 15,
+              "planted": 30,
+              "seen_in_3_frames": 29,
+              "linked": 24,
+              "fraction_linked": 0.8,
+              "extra_false_tracks": 2
+            },
+            {
+              "peak_snr": 25,
+              "planted": 30,
+              "seen_in_3_frames": 29,
+              "linked": 21,
+              "fraction_linked": 0.7,
+              "extra_false_tracks": 3
+            }
+          ]
+        }
+      },
+      "match": {
+        "detections": 10,
+        "target_recovery": {
+          "frames": 38,
+          "span_years": 0.72,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": false
+        },
+        "fast_tracks_in_real_data": 0,
+        "injection_synthetic": {
+          "psf_sigma_arcsec": 3.97,
+          "levels": [
+            {
+              "peak_snr": 5,
+              "planted": 30,
+              "seen_in_3_frames": 12,
+              "linked": 10,
+              "fraction_linked": 0.333,
+              "extra_false_tracks": 1
+            },
+            {
+              "peak_snr": 7,
+              "planted": 30,
+              "seen_in_3_frames": 21,
+              "linked": 17,
+              "fraction_linked": 0.567,
+              "extra_false_tracks": 5
+            },
+            {
+              "peak_snr": 10,
+              "planted": 30,
+              "seen_in_3_frames": 22,
+              "linked": 16,
+              "fraction_linked": 0.533,
+              "extra_false_tracks": 4
+            },
+            {
+              "peak_snr": 15,
+              "planted": 30,
+              "seen_in_3_frames": 28,
+              "linked": 24,
+              "fraction_linked": 0.8,
+              "extra_false_tracks": 1
+            },
+            {
+              "peak_snr": 25,
+              "planted": 30,
+              "seen_in_3_frames": 28,
+              "linked": 21,
+              "fraction_linked": 0.7,
+              "extra_false_tracks": 6
+            }
+          ]
+        }
+      }
+    }
+  },
+  "barnard_D4": {
+    "target": "Barnard's Star",
+    "detector": "D4",
+    "collection": "spherex_dr1",
+    "frames": 41,
+    "area_sq_deg": 0.04000000000000001,
+    "peaks_per_frame_5_sigma": {
+      "plain_vs_first_frame": {
+        "median": 38.5,
+        "mean": 51.02,
+        "total": 2041,
+        "frames": 40
+      },
+      "plain_vs_median": {
+        "median": 150.0,
+        "mean": 119.07,
+        "total": 4882,
+        "frames": 41
+      },
+      "plain_vs_median_local_noise": {
+        "median": 4.0,
+        "mean": 4.1,
+        "total": 168,
+        "frames": 41
+      },
+      "fit_only": {
+        "median": 137.0,
+        "mean": 139.54,
+        "total": 5721,
+        "frames": 41
+      },
+      "fit_only_local_noise": {
+        "median": 4.0,
+        "mean": 4.54,
+        "total": 186,
+        "frames": 41
+      },
+      "fit_and_match": {
+        "median": 149.0,
+        "mean": 144.61,
+        "total": 5929,
+        "frames": 41
+      },
+      "fit_and_match_local_noise": {
+        "median": 5.0,
+        "mean": 5.66,
+        "total": 232,
+        "frames": 41
+      }
+    },
+    "variants": {
+      "fit": {
+        "detections": 186,
+        "target_recovery": {
+          "frames": 41,
+          "span_years": 0.54,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 2,
+          "recovered": false
+        },
+        "fast_tracks_in_real_data": 6
+      },
+      "match": {
+        "detections": 232,
+        "target_recovery": {
+          "frames": 41,
+          "span_years": 0.54,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 2,
+          "recovered": false
+        },
+        "fast_tracks_in_real_data": 10
+      }
+    }
+  },
+  "eps_indi_b_D2": {
+    "target": "Epsilon Indi B",
+    "detector": "D2",
+    "collection": "spherex_dr1",
+    "frames": 64,
+    "area_sq_deg": 0.04000000000000001,
+    "peaks_per_frame_5_sigma": {
+      "plain_vs_first_frame": {
+        "median": 25.0,
+        "mean": 28.06,
+        "total": 1768,
+        "frames": 63
+      },
+      "plain_vs_median": {
+        "median": 50.5,
+        "mean": 53.45,
+        "total": 3421,
+        "frames": 64
+      },
+      "plain_vs_median_local_noise": {
+        "median": 0.0,
+        "mean": 0.69,
+        "total": 44,
+        "frames": 64
+      },
+      "fit_only": {
+        "median": 50.5,
+        "mean": 51.05,
+        "total": 3267,
+        "frames": 64
+      },
+      "fit_only_local_noise": {
+        "median": 0.0,
+        "mean": 0.61,
+        "total": 39,
+        "frames": 64
+      },
+      "fit_and_match": {
+        "median": 85.0,
+        "mean": 84.69,
+        "total": 5420,
+        "frames": 64
+      },
+      "fit_and_match_local_noise": {
+        "median": 2.0,
+        "mean": 3.42,
+        "total": 219,
+        "frames": 64
+      }
+    },
+    "variants": {
+      "fit": {
+        "detections": 39,
+        "target_recovery": {
+          "frames": 64,
+          "span_years": 1.02,
+          "frames_with_residual_detection": 2,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": true,
+          "offset_arcsec": 2.7,
+          "snr": 12.8,
+          "rate_arcsec_yr": 2.21,
+          "rate_err_arcsec_yr": 0.17,
+          "pm_east_arcsec_yr": 1.71,
+          "pm_north_arcsec_yr": -1.4,
+          "catalogue_pm_east_north": [
+            3.9609,
+            -2.539
+          ],
+          "rank_in_field": 1,
+          "field_calibration": {
+            "error_scale": 1.43,
+            "star_drift_arcsec_yr": [
+              -0.07,
+              -0.03
+            ],
+            "star_spread_arcsec_yr": 0.12,
+            "stars_used": 35
+          }
+        },
+        "fast_tracks_in_real_data": 0,
+        "injection_synthetic": {
+          "psf_sigma_arcsec": 3.97,
+          "levels": [
+            {
+              "peak_snr": 5,
+              "planted": 30,
+              "seen_in_3_frames": 18,
+              "linked": 18,
+              "fraction_linked": 0.6,
+              "extra_false_tracks": 4
+            },
+            {
+              "peak_snr": 7,
+              "planted": 30,
+              "seen_in_3_frames": 25,
+              "linked": 24,
+              "fraction_linked": 0.8,
+              "extra_false_tracks": 1
+            },
+            {
+              "peak_snr": 10,
+              "planted": 30,
+              "seen_in_3_frames": 28,
+              "linked": 26,
+              "fraction_linked": 0.867,
+              "extra_false_tracks": 3
+            },
+            {
+              "peak_snr": 15,
+              "planted": 30,
+              "seen_in_3_frames": 27,
+              "linked": 23,
+              "fraction_linked": 0.767,
+              "extra_false_tracks": 4
+            },
+            {
+              "peak_snr": 25,
+              "planted": 30,
+              "seen_in_3_frames": 28,
+              "linked": 27,
+              "fraction_linked": 0.9,
+              "extra_false_tracks": 4
+            }
+          ]
+        }
+      },
+      "match": {
+        "detections": 219,
+        "target_recovery": {
+          "frames": 64,
+          "span_years": 1.02,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": true,
+          "offset_arcsec": 2.7,
+          "snr": 12.8,
+          "rate_arcsec_yr": 2.21,
+          "rate_err_arcsec_yr": 0.17,
+          "pm_east_arcsec_yr": 1.71,
+          "pm_north_arcsec_yr": -1.4,
+          "catalogue_pm_east_north": [
+            3.9609,
+            -2.539
+          ],
+          "rank_in_field": 1,
+          "field_calibration": {
+            "error_scale": 1.43,
+            "star_drift_arcsec_yr": [
+              -0.07,
+              -0.03
+            ],
+            "star_spread_arcsec_yr": 0.12,
+            "stars_used": 35
+          }
+        },
+        "fast_tracks_in_real_data": 5,
+        "injection_synthetic": {
+          "psf_sigma_arcsec": 3.97,
+          "levels": [
+            {
+              "peak_snr": 5,
+              "planted": 30,
+              "seen_in_3_frames": 25,
+              "linked": 24,
+              "fraction_linked": 0.8,
+              "extra_false_tracks": 2
+            },
+            {
+              "peak_snr": 7,
+              "planted": 30,
+              "seen_in_3_frames": 29,
+              "linked": 28,
+              "fraction_linked": 0.933,
+              "extra_false_tracks": 1
+            },
+            {
+              "peak_snr": 10,
+              "planted": 30,
+              "seen_in_3_frames": 27,
+              "linked": 24,
+              "fraction_linked": 0.8,
+              "extra_false_tracks": 5
+            },
+            {
+              "peak_snr": 15,
+              "planted": 30,
+              "seen_in_3_frames": 29,
+              "linked": 26,
+              "fraction_linked": 0.867,
+              "extra_false_tracks": 5
+            },
+            {
+              "peak_snr": 25,
+              "planted": 30,
+              "seen_in_3_frames": 28,
+              "linked": 26,
+              "fraction_linked": 0.867,
+              "extra_false_tracks": 13
+            }
+          ]
+        }
+      }
+    }
+  },
+  "eps_indi_b_D3": {
+    "target": "Epsilon Indi B",
+    "detector": "D3",
+    "collection": "spherex_dr1",
+    "frames": 60,
+    "area_sq_deg": 0.04000000000000001,
+    "peaks_per_frame_5_sigma": {
+      "plain_vs_first_frame": {
+        "median": 14.0,
+        "mean": 20.46,
+        "total": 1207,
+        "frames": 59
+      },
+      "plain_vs_median": {
+        "median": 43.5,
+        "mean": 44.27,
+        "total": 2656,
+        "frames": 60
+      },
+      "plain_vs_median_local_noise": {
+        "median": 0.0,
+        "mean": 0.65,
+        "total": 39,
+        "frames": 60
+      },
+      "fit_only": {
+        "median": 43.0,
+        "mean": 47.37,
+        "total": 2842,
+        "frames": 60
+      },
+      "fit_only_local_noise": {
+        "median": 0.0,
+        "mean": 0.45,
+        "total": 27,
+        "frames": 60
+      },
+      "fit_and_match": {
+        "median": 89.5,
+        "mean": 87.62,
+        "total": 5257,
+        "frames": 60
+      },
+      "fit_and_match_local_noise": {
+        "median": 2.0,
+        "mean": 3.57,
+        "total": 214,
+        "frames": 60
+      }
+    },
+    "variants": {
+      "fit": {
+        "detections": 27,
+        "target_recovery": {
+          "frames": 60,
+          "span_years": 1.01,
+          "frames_with_residual_detection": 2,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": true,
+          "offset_arcsec": 2.5,
+          "snr": 13.3,
+          "rate_arcsec_yr": 3.42,
+          "rate_err_arcsec_yr": 0.26,
+          "pm_east_arcsec_yr": 2.96,
+          "pm_north_arcsec_yr": -1.71,
+          "catalogue_pm_east_north": [
+            3.9609,
+            -2.539
+          ],
+          "rank_in_field": 1,
+          "field_calibration": {
+            "error_scale": 1.54,
+            "star_drift_arcsec_yr": [
+              -0.08,
+              0.02
+            ],
+            "star_spread_arcsec_yr": 0.14,
+            "stars_used": 34
+          }
+        },
+        "fast_tracks_in_real_data": 0
+      },
+      "match": {
+        "detections": 214,
+        "target_recovery": {
+          "frames": 60,
+          "span_years": 1.01,
+          "frames_with_residual_detection": 0,
+          "slow_mover_candidates_in_field": 1,
+          "recovered": true,
+          "offset_arcsec": 2.5,
+          "snr": 13.3,
+          "rate_arcsec_yr": 3.42,
+          "rate_err_arcsec_yr": 0.26,
+          "pm_east_arcsec_yr": 2.96,
+          "pm_north_arcsec_yr": -1.71,
+          "catalogue_pm_east_north": [
+            3.9609,
+            -2.539
+          ],
+          "rank_in_field": 1,
+          "field_calibration": {
+            "error_scale": 1.54,
+            "star_drift_arcsec_yr": [
+              -0.08,
+              0.02
+            ],
+            "star_spread_arcsec_yr": 0.14,
+            "stars_used": 34
+          }
+        },
+        "fast_tracks_in_real_data": 3
+      }
+    }
+  }
+}

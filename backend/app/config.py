@@ -104,3 +104,44 @@ DOWNLOAD_WORKERS = 8
 HTTP_TIMEOUT_S = 60
 HTTP_RETRIES = 4
 HTTP_BACKOFF_S = 2.0
+
+# --- Engine: clean differences ---
+
+ENGINE_COLLECTION = "spherex_dr1"
+ENGINE_POLY_DEGREE = 2
+ENGINE_FIT_ROUNDS = 5
+ENGINE_CLIP_SIGMA = 3.0
+ENGINE_RIDGE = 1e-3
+# Half width of the window used to match local sampling, in grid pixels
+ENGINE_MATCH_HALF_PIX = 6
+# Shortest time span over which a per-pixel change with time is fitted
+ENGINE_MIN_TREND_YEARS = 0.3
+
+# --- Detection and linking ---
+
+DETECT_SIGMA = 5.0
+DETECT_MIN_AREA = 3
+LINK_MIN_FRAMES = 3
+# Fast movers inside one pass (asteroids). Rates in arcsec per day.
+LINK_FAST = {
+    "max_rate": 2880.0,
+    "min_gap": 0.01,
+    "max_gap": 2.0,
+    "min_shift": 6.0,
+    "tol": 4.5,
+}
+# Slow movers across passes months apart (nearby stars, brown dwarfs)
+LINK_SLOW = {
+    "max_rate": 20.0 / 365.25,
+    "min_gap": 100.0,
+    "max_gap": 1000.0,
+    "min_shift": 4.5,
+    "tol": 3.0,
+}
+
+# Slow movers: window for the velocity fit, and the smallest rate reported
+SLOW_FIT_HALF_PIX = 6
+SLOW_MIN_RATE_ARCSEC_YR = 1.0
+# Bright stars used to measure the field's own false velocities
+SLOW_STAR_SNR = 20.0
+SLOW_MIN_STARS = 8

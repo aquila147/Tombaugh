@@ -246,9 +246,15 @@ def build_frames(
     fov_deg: float,
     detectors: list[str],
     max_per_detector: int | None = None,
+    collection: str | None = None,
 ) -> dict:
-    """Search, download, clean, align and reproject every frame of a field."""
+    """Search, download, clean, align and reproject every frame of a field.
+
+    Pass a collection to keep to one data release.
+    """
     products = archive.search(ra, dec)
+    if collection:
+        products = [p for p in products if p["collection"] == collection]
     stars = catalogs.gaia_stars(ra, dec, fov_deg * 0.75)
     usable = isolated_stars(stars) if stars else np.zeros(0, dtype=bool)
     grid, size = make_grid(ra, dec, fov_deg)
