@@ -783,6 +783,8 @@ function wire() {
       return;
     }
     if (event.target instanceof HTMLButtonElement && event.key === " ") return;
+    // Space on the "How to use this" heading opens and closes it
+    if (event.target.tagName === "SUMMARY" && event.key === " ") return;
     const key = event.key.toLowerCase();
     const actions = {
       " ": () => $("b-play").click(),

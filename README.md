@@ -8,8 +8,8 @@ Tombaugh is a public web tool that does the same with images from NASA's SPHEREx
 
 Built for the NASA Space Apps Challenge 2026, challenge "Planet X and SPHEREx".
 
-- **Live site:** _to be added by the team_
-- **Back end:** _to be added by the team_
+- **Live site:** https://www.tombaugh.earth (backup: https://tombaugh.vercel.app)
+- **Back end:** https://tombaugh-api.niceisland-b9881831.southeastasia.azurecontainerapps.io
 
 Every number in this file is printed by `python -m scripts.validate` (run from `backend/`), which names the script that regenerates each one from the SPHEREx data.
 
@@ -192,7 +192,7 @@ Synthetic data appears only in the injection test and the unit tests, is labelle
 
 **Data**
 
-- **SPHEREx** Level 2 spectral images, Data Release 1 (and Quick Release 3 in some showcase plates), from the NASA/IPAC Infrared Science Archive (IRSA): image search (SIA2) and the cutout service. _Archive DOI and SPHEREx acknowledgement text: to be copied by the team from the IRSA SPHEREx page._ This research has made use of the NASA/IPAC Infrared Science Archive, which is funded by the National Aeronautics and Space Administration and operated by the California Institute of Technology.
+- **SPHEREx** Level 2 spectral images, Data Release 1 (and Quick Release 3 in some showcase plates), from the NASA/IPAC Infrared Science Archive (IRSA): image search (SIA2) and the cutout service. Releases used: the engine, the injection test, the Singapore demo field and the brown dwarf score use Data Release 1 only; the showcase plates and motion fits also use Quick Release 3 exposures; live lookups use Data Release 1. SPHEREx archive citation: DOI [10.26131/IRSA652](https://doi.org/10.26131/IRSA652) (the SPHEREx Quick Release 2 spectral image archive at IRSA). _SPHEREx acknowledgement paragraph: to be pasted by the team from the IRSA SPHEREx page._ This research has made use of the NASA/IPAC Infrared Science Archive, which is funded by the National Aeronautics and Space Administration and operated by the California Institute of Technology.
 - **Gaia DR3** (ESA Gaia mission, processed by the Gaia Data Processing and Analysis Consortium), queried from the ESA Gaia Archive and, when that did not answer, from the Gaia partner archive at the Leibniz Institute for Astrophysics Potsdam (gaia.aip.de).
 - **SIMBAD**, operated at CDS, Strasbourg, France, queried through its TAP service and, when that did not answer, through the mirror at the Harvard-Smithsonian Center for Astrophysics (simbad.harvard.edu).
 - **JPL Small-Body Identification API** (NASA Jet Propulsion Laboratory, Solar System Dynamics) for known asteroids and comets.
